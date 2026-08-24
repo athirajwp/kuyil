@@ -317,3 +317,234 @@ textarea {
   font-size: 10px;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   Kuyil Bird Flying Animation (Black & White Monochrome - Big Intro)
+   ========================================================================== */
+.kuyil-fly-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+/* Background Dimmed Glass Spotlight during initial big bird splash */
+.kuyil-intro-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+  animation: kuyilSpotlightFade 1.6s ease-out forwards;
+}
+
+@keyframes kuyilSpotlightFade {
+  0% { opacity: 1; }
+  60% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+.kuyil-flying-bird-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  animation: kuyilSwoopFlight 2.3s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Grand Flight Path: Starts HUGE in center screen, then swoops down to Navbar logo! */
+@keyframes kuyilSwoopFlight {
+  0% {
+    opacity: 0;
+    transform: translate3d(calc(50vw - 40px), calc(42vh - 40px), 0) scale(4.6) rotate(-18deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(calc(50vw - 40px), calc(38vh - 40px), 0) scale(4.2) rotate(10deg);
+  }
+  35% {
+    opacity: 1;
+    transform: translate3d(calc(68vw - 40px), calc(28vh - 40px), 0) scale(3.2) rotate(-16deg);
+  }
+  62% {
+    opacity: 1;
+    transform: translate3d(calc(28vw - 40px), calc(55vh - 40px), 0) scale(2.0) rotate(14deg);
+  }
+  85% {
+    opacity: 1;
+    transform: translate3d(calc(var(--target-x) - 40px), calc(var(--target-y) + 30px), 0) scale(1.3) rotate(-6deg);
+  }
+  94% {
+    opacity: 1;
+    transform: translate3d(calc(var(--target-x) - 40px), calc(var(--target-y) - 40px), 0) scale(1.1) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(calc(var(--target-x) - 40px), calc(var(--target-y) - 40px), 0) scale(0.55) rotate(0deg);
+  }
+}
+
+.kuyil-flying-bird-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6));
+}
+
+.kuyil-flying-frame-wrapper {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kuyil-flying-frame-img,
+.kuyil-navbar-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+[data-theme='dark'] .kuyil-flying-frame-img,
+[data-theme='dark'] .kuyil-navbar-logo-img {
+  filter: brightness(0) invert(1);
+}
+
+/* Wing Flapping Keyframes */
+.kuyil-wing-front {
+  transform-origin: 45px 34px;
+  animation: kuyilWingFlapFront 0.15s ease-in-out infinite alternate;
+}
+
+.kuyil-wing-back {
+  transform-origin: 42px 32px;
+  animation: kuyilWingFlapBack 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes kuyilWingFlapFront {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  100% {
+    transform: rotate(-40deg) scaleY(0.6) skewX(12deg);
+  }
+}
+
+@keyframes kuyilWingFlapBack {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  100% {
+    transform: rotate(-34deg) scaleY(0.65) skewX(-12deg);
+  }
+}
+
+/* Floating Music Trail Notes (B&W High Contrast) */
+.kuyil-trail-container {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.kuyil-trail-note {
+  position: relative;
+  font-size: 18px;
+  color: var(--text-primary);
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 6px rgba(0, 0, 0, 0.8);
+  animation: kuyilNoteFloat 0.8s ease-out forwards;
+}
+
+@keyframes kuyilNoteFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50px, -28px) scale(0.2);
+  }
+}
+
+/* Concentric Ripple Soundwave Landing Rings (Black & White) */
+.kuyil-landing-ripple-container {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  pointer-events: none;
+  z-index: 99998;
+}
+
+.kuyil-ripple-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--text-primary);
+  box-shadow: 0 0 24px var(--text-primary), inset 0 0 12px var(--text-primary);
+  animation: kuyilRippleExpand 0.85s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.kuyil-ripple-ring.ring-2 {
+  animation-delay: 0.16s;
+}
+
+.kuyil-ripple-ring.ring-3 {
+  animation-delay: 0.32s;
+}
+
+@keyframes kuyilRippleExpand {
+  0% {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+/* Navbar Logo Landing Effects */
+.kuyil-logo-flying-hidden {
+  opacity: 0.15;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+.kuyil-logo-landed {
+  animation: logoLandBounce 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes logoLandBounce {
+  0% {
+    transform: scale(0.5) rotate(-12deg);
+    filter: drop-shadow(0 0 16px var(--text-primary));
+  }
+  60% {
+    transform: scale(1.3) rotate(4deg);
+    filter: drop-shadow(0 0 24px var(--text-primary));
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.kuyil-title-shine {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 50%, var(--text-primary) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: kuyilTitleShine 3s linear infinite;
+}
+
+@keyframes kuyilTitleShine {
+  to {
+    background-position: 200% center;
+  }
+}

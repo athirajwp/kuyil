@@ -206,6 +206,15 @@ export const AppProvider = ({ children }) => {
   const [posts, setPosts] = useState(INITIAL_POSTS);
   const [userReplies, setUserReplies] = useState(INITIAL_USER_REPLIES);
   
+  // Kuyil Flying Animation State
+  const [flyKey, setFlyKey] = useState(0);
+  const [isFlying, setIsFlying] = useState(true);
+
+  const triggerKuyilFlight = () => {
+    setFlyKey(prev => prev + 1);
+    setIsFlying(true);
+  };
+
   // UI Overlays
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
@@ -314,6 +323,10 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
+      flyKey,
+      isFlying,
+      setIsFlying,
+      triggerKuyilFlight,
       theme,
       toggleTheme,
       activeTab,

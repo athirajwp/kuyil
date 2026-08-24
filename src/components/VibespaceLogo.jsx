@@ -1,9 +1,10 @@
 import React from 'react';
 
-export const KuyilLogo = ({ size = 44, style = {} }) => {
+export const KuyilLogo = ({ size = 44, style = {}, className = '' }) => {
   return (
     <div
       title="Kuyil"
+      className={className}
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -15,13 +16,13 @@ export const KuyilLogo = ({ size = 44, style = {} }) => {
       }}
     >
       <img
-        src="/kuyil-logo.png"
+        src="/kuyil-frame-1.png"
         alt="Kuyil Logo"
+        className="kuyil-navbar-logo-img"
         style={{
           width: '100%',
           height: '100%',
           objectFit: 'contain',
-          filter: 'var(--logo-filter, brightness(0))',
           display: 'block'
         }}
       />

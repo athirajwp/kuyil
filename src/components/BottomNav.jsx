@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Send, Bell, User, Headphones } from 'lucide-react';
+import { Home, Send, Bell, User, Radio, Headphones } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const BottomNav = () => {
@@ -24,11 +24,11 @@ export const BottomNav = () => {
       </button>
 
       <button
-        className={`nav-item ${activeTab === 'listen' ? 'active' : ''}`}
-        onClick={() => setActiveTab('listen')}
-        title="Listen Together"
+        className={`nav-item ${activeTab === 'voice' ? 'active' : ''}`}
+        onClick={() => setActiveTab('voice')}
+        title="Voice Spaces"
       >
-        <Headphones size={23} strokeWidth={activeTab === 'listen' ? 2.5 : 1.8} />
+        <Radio size={24} strokeWidth={activeTab === 'voice' ? 2.5 : 1.8} className={activeTab === 'voice' ? '' : 'animate-pulse'} />
       </button>
 
       <button

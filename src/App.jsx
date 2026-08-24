@@ -94,10 +94,13 @@ class GlobalErrorBoundary extends React.Component {
   }
 }
 
+import { KuyilFlyAnimation } from './components/KuyilFlyAnimation';
+
 export function App() {
   return (
     <GlobalErrorBoundary>
       <AppProvider>
+        <KuyilFlyAnimation />
         <div className="app-container">
           <Navbar />
           <MainContent />

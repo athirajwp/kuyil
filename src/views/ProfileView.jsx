@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
-import { BarChart2, Search, Settings, UserPlus, Camera, Edit3 } from 'lucide-react';
+import { Settings, Camera } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { PostCard } from '../components/PostCard';
-
-const InstagramIcon = ({ size = 22, color = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-  </svg>
-);
 
 export const ProfileView = () => {
   const { user, posts, userReplies, setActiveTab, setIsEditProfileOpen, selectedUserProfile, setSelectedUserProfile, followedUsers, toggleFollow } = useApp();
@@ -29,7 +21,7 @@ export const ProfileView = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {/* Top Profile Header Bar */}
-      <div style={{ padding: '16px 16px 8px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ padding: '12px 16px 4px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {!isOwnProfile ? (
           <button 
             onClick={handleBackToFeed}
@@ -38,16 +30,12 @@ export const ProfileView = () => {
             ← Back to feed
           </button>
         ) : (
-          <button style={{ color: 'var(--text-primary)', padding: '4px' }}>
-            <BarChart2 size={24} />
-          </button>
+          <div />
         )}
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button style={{ color: 'var(--text-primary)', padding: '4px' }}><Search size={22} /></button>
-          <button style={{ color: 'var(--text-primary)', padding: '4px' }}><InstagramIcon size={22} /></button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {isOwnProfile && (
-            <button onClick={() => setActiveTab('settings')} style={{ color: 'var(--text-primary)', padding: '4px' }} title="Settings">
+            <button onClick={() => setActiveTab('settings')} style={{ color: 'var(--text-primary)', padding: '4px', cursor: 'pointer' }} title="Settings">
               <Settings size={22} />
             </button>
           )}
@@ -70,14 +58,6 @@ export const ProfileView = () => {
             </p>
           )}
 
-          {isOwnProfile && (
-            <div style={{ marginTop: '8px' }}>
-              <button className="pill" style={{ fontSize: '13px', padding: '4px 12px' }}>
-                ✦ + Add interests ✦
-              </button>
-            </div>
-          )}
-
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
             <div style={{ display: 'flex', marginLeft: '4px' }}>
               {(displayUser.followers || []).map((f, i) => (
@@ -96,7 +76,11 @@ export const ProfileView = () => {
         </div>
 
         {/* Avatar */}
-        <div style={{ position: 'relative' }}>
+        <div 
+          onClick={() => isOwnProfile && setIsEditProfileOpen(true)}
+          style={{ position: 'relative', cursor: isOwnProfile ? 'pointer' : 'default' }}
+          title={isOwnProfile ? "Click to change profile picture" : ""}
+        >
           <img 
             src={displayUser.avatar} 
             alt={displayUser.name} 
@@ -107,21 +91,21 @@ export const ProfileView = () => {
               style={{
                 position: 'absolute',
                 bottom: '0px',
-                left: '-8px',
-                backgroundColor: 'var(--bg-primary)',
-                border: '1.5px dashed var(--text-secondary)',
+                right: '0px',
+                backgroundColor: 'var(--accent-blue)',
+                color: '#ffffff',
                 borderRadius: '50%',
                 width: '26px',
                 height: '26px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'var(--text-primary)',
                 fontSize: '12px',
-                fontWeight: '700'
+                fontWeight: '700',
+                boxShadow: 'var(--shadow-sm)'
               }}
             >
-              +
+              <Camera size={13} />
             </div>
           )}
         </div>
@@ -181,173 +165,276 @@ export const ProfileView = () => {
         )}
       </div>
 
-      {/* Profile Navigation Tabs matching Screenshot 7 */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)' }}>
-        {['vibes', 'replies', 'media', 'reposts'].map(tab => (
+      {/* Profile Navigation Tabs tailored to Kuyil App Features */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+        {[
+          { id: 'posts', label: 'Posts' },
+          { id: 'voice', label: 'Voice Clips' },
+          { id: 'music', label: 'Music' },
+          { id: 'saved', label: 'Saved' }
+        ].map(tab => (
           <button
-            key={tab}
-            onClick={() => setProfileTab(tab)}
+            key={tab.id}
+            onClick={() => setProfileTab(tab.id)}
             style={{
               flex: 1,
               padding: '12px 0',
-              fontSize: '15px',
-              fontWeight: '600',
-              color: profileTab === tab ? 'var(--text-primary)' : 'var(--text-muted)',
-              borderBottom: profileTab === tab ? '2px solid var(--text-primary)' : 'none',
-              textTransform: 'capitalize'
+              fontSize: '14px',
+              fontWeight: '700',
+              color: profileTab === tab.id ? 'var(--accent-blue)' : 'var(--text-muted)',
+              borderBottom: profileTab === tab.id ? '2.5px solid var(--accent-blue)' : '2.5px solid transparent',
+              transition: 'all 0.15s ease',
+              cursor: 'pointer'
             }}
           >
-            {tab === 'vibes' ? 'Threads' : tab}
+            {tab.label}
           </button>
         ))}
       </div>
 
       {/* Content depending on Profile Tab */}
-      {profileTab === 'vibes' && (
+      {/* 1. Posts Tab */}
+      {profileTab === 'posts' && (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* Finish your profile Carousel matching Screenshots 7 & 8 */}
-          <div style={{ padding: '16px 16px 8px 16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>Finish your profile</span>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>4 left</span>
+          {userPosts.length > 0 ? (
+            userPosts.map(p => <PostCard key={p.id} post={p} />)
+          ) : (
+            <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>✍️</div>
+              <p style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>No music posts yet</p>
+              <p style={{ fontSize: '13px', marginTop: '4px', color: 'var(--text-secondary)' }}>Share your music vibes, thoughts, or voice notes on Kuyil!</p>
             </div>
-
-            <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '12px', scrollbarWidth: 'none' }}>
-              {/* Card 1 */}
-              <div style={{
-                minWidth: '220px',
-                padding: '20px 16px',
-                borderRadius: '16px',
-                backgroundColor: 'var(--bg-secondary)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '12px'
-              }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <UserPlus size={22} color="var(--text-primary)" />
-                </div>
-                <div>
-                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>Follow 10 profiles</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Fill your feed with threads that interest you.</div>
-                </div>
-                <button style={{ width: '100%', padding: '10px 0', borderRadius: '10px', backgroundColor: 'var(--accent-color)', color: 'var(--accent-text)', fontWeight: '700', fontSize: '14px', marginTop: 'auto' }}>
-                  See profiles
-                </button>
-              </div>
-
-              {/* Card 2 */}
-              <div style={{
-                minWidth: '220px',
-                padding: '20px 16px',
-                borderRadius: '16px',
-                backgroundColor: 'var(--bg-secondary)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '12px'
-              }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Camera size={22} color="var(--text-primary)" />
-                </div>
-                <div>
-                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>Add profile photo</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Make it easier for people to recognize you.</div>
-                </div>
-                <button onClick={() => setIsEditProfileOpen(true)} style={{ width: '100%', padding: '10px 0', borderRadius: '10px', backgroundColor: 'var(--accent-color)', color: 'var(--accent-text)', fontWeight: '700', fontSize: '14px', marginTop: 'auto' }}>
-                  Add
-                </button>
-              </div>
-
-              {/* Card 3 */}
-              <div style={{
-                minWidth: '220px',
-                padding: '20px 16px',
-                borderRadius: '16px',
-                backgroundColor: 'var(--bg-secondary)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '12px'
-              }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Edit3 size={22} color="var(--text-primary)" />
-                </div>
-                <div>
-                  <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>Add bio</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Introduce yourself and tell people what you're into.</div>
-                </div>
-                <button onClick={() => setIsEditProfileOpen(true)} style={{ width: '100%', padding: '10px 0', borderRadius: '10px', backgroundColor: 'var(--accent-color)', color: 'var(--accent-text)', fontWeight: '700', fontSize: '14px', marginTop: 'auto' }}>
-                  Add
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* User Posts List & "Post not available" blocks matching Screenshot 7 */}
-          {userPosts.map(p => <PostCard key={p.id} post={p} />)}
-
-          <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', fontWeight: '500' }}>
-              Post not available
-            </div>
-            <div style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', fontWeight: '500' }}>
-              Post not available
-            </div>
-          </div>
+          )}
         </div>
       )}
 
-      {profileTab === 'replies' && (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* Threaded Replies matching Screenshot 12 */}
-          {userReplies.map(reply => (
-            <div key={reply.id} style={{ borderBottom: '1px solid var(--border-color)', padding: '16px' }}>
-              {/* Parent post block */}
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img src={reply.parentPost.author.avatar} alt="Avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
-                  <div className="thread-line" style={{ marginTop: '6px', minHeight: '30px' }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px' }}>
-                    <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{reply.parentPost.author.username}</span>
-                    <span style={{ color: 'var(--text-muted)' }}>{reply.parentPost.date}</span>
+      {/* 2. Voice Clips Tab */}
+      {profileTab === 'voice' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
+          {[
+            {
+              id: 'vc-1',
+              title: 'Tamil AI Voice & Music Models Discussion 🎙️',
+              duration: '0:45',
+              date: '2h ago',
+              likes: 24,
+              replies: 5,
+              waveform: [40, 70, 30, 90, 60, 80, 50, 90, 40, 60, 80, 30]
+            },
+            {
+              id: 'vc-2',
+              title: 'Late Night Acoustic Guitar Jam & Kuyil Vibe 🎸',
+              duration: '1:12',
+              date: 'Yesterday',
+              likes: 42,
+              replies: 8,
+              waveform: [60, 40, 80, 50, 90, 70, 40, 60, 30, 80, 50, 70]
+            },
+            {
+              id: 'vc-3',
+              title: 'Welcome to my Kuyil voice profile! 🕊️',
+              duration: '0:28',
+              date: '3 days ago',
+              likes: 56,
+              replies: 12,
+              waveform: [30, 60, 90, 50, 80, 40, 70, 90, 60, 40, 80, 50]
+            }
+          ].map(clip => (
+            <div
+              key={clip.id}
+              style={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '16px',
+                padding: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <img src={displayUser.avatar} alt="User" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
+                  <div>
+                    <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{displayUser.name}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '6px' }}>• {clip.date}</span>
                   </div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0' }}>Reply to unavailable post</div>
-                  <div style={{ fontSize: '15px', color: 'var(--text-primary)' }}>{reply.parentPost.content}</div>
                 </div>
+                <span className="pill" style={{ fontSize: '10px', fontWeight: '800', backgroundColor: 'rgba(59,130,246,0.12)', color: 'var(--accent-blue)' }}>
+                  VOICE CLIP
+                </span>
               </div>
 
-              {/* User Reply block */}
-              <div style={{ display: 'flex', gap: '12px', marginTop: '8px', paddingLeft: '8px' }}>
-                <img src={reply.userReply.author.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px' }}>
-                    <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{reply.userReply.author.username}</span>
-                    <span style={{ color: 'var(--text-muted)' }}>{reply.userReply.date}</span>
-                  </div>
-                  <div style={{ fontSize: '15px', color: 'var(--text-primary)', marginTop: '2px' }}>{reply.userReply.content}</div>
+              <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
+                {clip.title}
+              </div>
+
+              {/* Audio Waveform Player Bar */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'var(--bg-secondary)', padding: '10px 14px', borderRadius: '12px' }}>
+                <button
+                  onClick={() => alert(`Playing voice clip: ${clip.title}`)}
+                  style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--accent-blue)',
+                    color: '#fff',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}
+                >
+                  ▶
+                </button>
+
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '3px', height: '24px' }}>
+                  {clip.waveform.map((val, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        flex: 1,
+                        height: `${val}%`,
+                        backgroundColor: 'var(--accent-blue)',
+                        borderRadius: '2px',
+                        opacity: idx < 4 ? 1 : 0.4
+                      }}
+                    />
+                  ))}
                 </div>
+
+                <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)' }}>{clip.duration}</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: 'var(--text-muted)', paddingTop: '4px' }}>
+                <span>❤️ {clip.likes} likes</span>
+                <span>💬 {clip.replies} replies</span>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {profileTab === 'media' && (
-        <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
-          <p style={{ fontSize: '15px', fontWeight: '500' }}>No media uploaded yet.</p>
+      {/* 3. Music Tab */}
+      {profileTab === 'music' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
+          <div style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--text-muted)', marginBottom: '2px' }}>
+            Favorite Tracks & Saved Playlist (4)
+          </div>
+
+          {[
+            {
+              id: 'tr-1',
+              title: 'Nallaru Po | Dude',
+              artist: 'Pradeep Ranganathan | Think Music',
+              duration: '4:01',
+              cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300'
+            },
+            {
+              id: 'tr-2',
+              title: 'Aasa Kooda | Sai Abhyankkar',
+              artist: 'Sai Abhyankkar | Think Music',
+              duration: '3:32',
+              cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300'
+            },
+            {
+              id: 'tr-3',
+              title: 'Neeye Neeye | Phani Kalyan',
+              artist: 'Phani Kalyan | Think Music',
+              duration: '4:28',
+              cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300'
+            },
+            {
+              id: 'tr-4',
+              title: 'Vibe With Me (Kuyil Session)',
+              artist: 'Athi Raj & Friends',
+              duration: '3:15',
+              cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300'
+            }
+          ].map(track => (
+            <div
+              key={track.id}
+              style={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '14px',
+                padding: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                <img src={track.cover} alt={track.title} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} />
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {track.title}
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {track.artist}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>{track.duration}</span>
+                <button
+                  onClick={() => alert(`Playing song: ${track.title}`)}
+                  className="pill active"
+                  style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                >
+                  <span>▶ Play</span>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {profileTab === 'reposts' && (
-        /* Matching Screenshot 15 */
-        <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
-          <p style={{ fontSize: '15px', fontWeight: '500' }}>You haven't reposted any threads yet.</p>
+      {/* 4. Saved Tab */}
+      {profileTab === 'saved' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
+          <div style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--text-muted)', marginBottom: '2px' }}>
+            Bookmarked Vibes & Saved Spaces
+          </div>
+
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '16px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span className="pill" style={{ fontSize: '10px', fontWeight: '800', backgroundColor: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>
+                SAVED VOICE SPACE
+              </span>
+              <span style={{ fontSize: '11px', color: '#22c55e', fontWeight: '700' }}>● 142 listening</span>
+            </div>
+            <div style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>
+              Late Night Tech & AI Vibes 🎙️
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              Hosted by Tech Reader • Drop-in live group audio chats & discussions
+            </div>
+            <button
+              onClick={() => setActiveTab('voice')}
+              className="pill active"
+              style={{ padding: '8px 0', fontSize: '13px', fontWeight: '700', textAlign: 'center', marginTop: '4px', cursor: 'pointer' }}
+            >
+              Drop In Space
+            </button>
+          </div>
         </div>
       )}
     </div>
