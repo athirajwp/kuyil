@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { VibespaceLogo } from './VibespaceLogo';
 
 export const Navbar = () => {
-  const { activeTab, setActiveTab, setIsDrawerOpen, theme, toggleTheme, selectedCommunity, setSelectedCommunity, triggerKuyilFlight, isFlying } = useApp();
+  const { activeTab, setActiveTab, setIsDrawerOpen, theme, toggleTheme, selectedCommunity, setSelectedCommunity, triggerKuyilFlight, isFlying, setIsSearchOpen } = useApp();
 
   const isSubPage = ['settings', 'saved', 'liked'].includes(activeTab) || selectedCommunity !== null;
 
@@ -67,11 +67,11 @@ export const Navbar = () => {
           {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
         </button>
         <button 
-          onClick={() => setActiveTab('activity')}
-          style={{ display: 'flex', alignItems: 'center', padding: '6px' }}
-          title="Search"
+          onClick={() => setActiveTab('search')}
+          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'search' ? 'var(--accent-blue)' : 'var(--text-primary)' }}
+          title="Search People, Voice Spaces & Music"
         >
-          <Search size={22} color="var(--text-primary)" strokeWidth={2.2} />
+          <Search size={22} strokeWidth={2.2} />
         </button>
       </div>
     </header>

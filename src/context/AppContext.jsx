@@ -220,6 +220,7 @@ export const AppProvider = ({ children }) => {
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isListenRoomOpen, setIsListenRoomOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   // Voice Spaces State
   const [activeVoiceRoom, setActiveVoiceRoom] = useState(null);
@@ -360,6 +361,8 @@ export const AppProvider = ({ children }) => {
       setIsEditProfileOpen,
       isListenRoomOpen,
       setIsListenRoomOpen,
+      isSearchOpen,
+      setIsSearchOpen,
       activeVoiceRoom,
       setActiveVoiceRoom,
       isVoiceRoomMinimized,

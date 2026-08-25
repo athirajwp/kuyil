@@ -5,7 +5,6 @@ import { BottomNav } from './components/BottomNav';
 import { Drawer } from './components/Drawer';
 import { EditProfileModal } from './components/EditProfileModal';
 import { ComposeModal } from './components/ComposeModal';
-
 import { GlobalAudioEngine } from './components/listen/GlobalAudioEngine';
 import { MiniMusicPlayer } from './components/listen/MiniMusicPlayer';
 import { ListenTogetherRoom } from './components/listen/ListenTogetherRoom';
@@ -17,6 +16,7 @@ import { ActivityView } from './views/ActivityView';
 import { ProfileView } from './views/ProfileView';
 import { SettingsView } from './views/SettingsView';
 import { SavedView, LikedView } from './views/SavedLikedView';
+import { SearchView } from './views/SearchView';
 import { VoiceRoomsView } from './components/voice/VoiceRoomsView';
 import { MiniVoiceSpaceBar } from './components/voice/MiniVoiceSpaceBar';
 
@@ -33,6 +33,8 @@ const MainContent = () => {
         return <ListenTogetherRoom />;
       case 'voice':
         return <VoiceRoomsView />;
+      case 'search':
+        return <SearchView />;
       case 'activity':
         return <ActivityView />;
       case 'profile':

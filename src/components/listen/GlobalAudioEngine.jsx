@@ -71,7 +71,7 @@ export const GlobalAudioEngine = () => {
   return (
     <iframe
       ref={iframeRef}
-      src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&playsinline=1&autoplay=1`}
+      src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&playsinline=1&autoplay=0`}
       title="Global Persistent YouTube Music Engine"
       width="1"
       height="1"
