@@ -299,14 +299,14 @@ const VoiceRoomsViewContent = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '16px 16px 24px 16px' }}>
       {/* Top Header Section (Visible when not in full room view) */}
       {!isFullRoomActive && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-            <div>
-              <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                <Radio size={24} color="var(--accent-blue)" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <h1 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.4px', color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Radio size={20} color="var(--accent-blue)" />
                 <span>Voice Spaces</span>
               </h1>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px', margin: 0 }}>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', margin: '2px 0 0 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                 Drop-in live group audio chats & discussions
               </p>
             </div>
@@ -316,17 +316,19 @@ const VoiceRoomsViewContent = () => {
               onClick={() => setIsCreateModalOpen(true)}
               className="pill active"
               style={{
-                padding: '9px 18px',
-                fontSize: '14px',
+                padding: '6px 14px',
+                fontSize: '12px',
                 fontWeight: '700',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: 'var(--shadow-sm)',
-                cursor: 'pointer'
+                gap: '4px',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                flexShrink: 0,
+                boxShadow: 'var(--shadow-sm)'
               }}
             >
-              <Plus size={16} />
+              <Plus size={14} strokeWidth={2.8} />
               <span>Start Space</span>
             </button>
           </div>
