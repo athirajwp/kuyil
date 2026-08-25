@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Send, Bell, User, Radio, Headphones } from 'lucide-react';
+import { Home, Send, Headphones, Radio, Bell, User } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const BottomNav = () => {
@@ -21,6 +21,14 @@ export const BottomNav = () => {
         title="Direct Messages"
       >
         <Send size={22} strokeWidth={activeTab === 'messages' ? 2.5 : 1.8} style={{ transform: 'rotate(-20deg)' }} />
+      </button>
+
+      <button
+        className={`nav-item ${activeTab === 'listen' ? 'active' : ''}`}
+        onClick={() => setActiveTab('listen')}
+        title="Listen Together Music Room"
+      >
+        <Headphones size={24} strokeWidth={activeTab === 'listen' ? 2.5 : 1.8} />
       </button>
 
       <button

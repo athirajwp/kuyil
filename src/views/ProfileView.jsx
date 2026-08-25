@@ -4,8 +4,8 @@ import { useApp } from '../context/AppContext';
 import { PostCard } from '../components/PostCard';
 
 export const ProfileView = () => {
-  const { user, posts, userReplies, setActiveTab, setIsEditProfileOpen, selectedUserProfile, setSelectedUserProfile, followedUsers, toggleFollow } = useApp();
-  const [profileTab, setProfileTab] = useState('vibes');
+  const { user, posts, userReplies, setActiveTab, setIsEditProfileOpen, selectedUserProfile, setSelectedUserProfile, followedUsers, toggleFollow, setIsComposeOpen } = useApp();
+  const [profileTab, setProfileTab] = useState('posts');
 
   const displayUser = selectedUserProfile || user;
   const isOwnProfile = !selectedUserProfile || selectedUserProfile.username === user.username;
@@ -202,7 +202,23 @@ export const ProfileView = () => {
             <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>✍️</div>
               <p style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>No music posts yet</p>
-              <p style={{ fontSize: '13px', marginTop: '4px', color: 'var(--text-secondary)' }}>Share your music vibes, thoughts, or voice notes on Kuyil!</p>
+              <p style={{ fontSize: '13px', marginTop: '4px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Share your music vibes, thoughts, or voice notes on Kuyil!</p>
+              {isOwnProfile && (
+                <button
+                  onClick={() => setIsComposeOpen(true)}
+                  style={{
+                    padding: '10px 24px',
+                    borderRadius: '20px',
+                    backgroundColor: 'var(--accent-blue)',
+                    color: '#ffffff',
+                    fontWeight: '700',
+                    fontSize: '14px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Create New Post
+                </button>
+              )}
             </div>
           )}
         </div>

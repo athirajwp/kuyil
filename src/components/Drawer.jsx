@@ -11,12 +11,13 @@ import {
   Bookmark, 
   Heart,
   Settings,
-  Radio
+  Radio,
+  PlusCircle
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const Drawer = () => {
-  const { isDrawerOpen, setIsDrawerOpen, setSelectedCommunity, setActiveTab, activeTab } = useApp();
+  const { isDrawerOpen, setIsDrawerOpen, setSelectedCommunity, setActiveTab, activeTab, setIsComposeOpen } = useApp();
 
   if (!isDrawerOpen) return null;
 
@@ -26,8 +27,14 @@ export const Drawer = () => {
     setIsDrawerOpen(false);
   };
 
+  const handleCreatePost = () => {
+    setIsDrawerOpen(false);
+    setIsComposeOpen(true);
+  };
+
   const navItems = [
     { id: 'home', label: 'Home / Feed', icon: Home },
+    { id: 'compose', label: 'Create New Post ✍️', icon: PlusCircle, action: handleCreatePost },
     { id: 'voice', label: 'Voice Spaces 🎙️', icon: Radio },
     { id: 'listen', label: 'Listen Together 🎧', icon: Headphones },
     { id: 'messages', label: 'Direct Messages', icon: MessageSquare },
@@ -106,7 +113,7 @@ export const Drawer = () => {
             return (
               <button 
                 key={item.id}
-                onClick={() => handleNavOther(targetTab)}
+                onClick={() => item.action ? item.action() : handleNavOther(targetTab)}
                 style={{ 
                   display: 'flex', 
                   alignItems: 'center', 

@@ -13,12 +13,13 @@ import {
   UserCheck,
   VolumeX,
   EyeOff,
-  Flag
+  Flag,
+  Trash2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const PostCard = ({ post }) => {
-  const { toggleLike, toggleSave, followedUsers, toggleFollow, viewUserProfile } = useApp();
+  const { toggleLike, toggleSave, followedUsers, toggleFollow, viewUserProfile, setActiveTab, user, deletePost } = useApp();
   const [showShareNotification, setShowShareNotification] = useState(false);
   const [notificationText, setNotificationText] = useState('✓ Link copied to clipboard!');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,11 +49,14 @@ export const PostCard = ({ post }) => {
         display: 'flex',
         gap: '12px',
         position: 'relative',
-        backgroundColor: post.isAd ? 'var(--bg-primary)' : 'transparent'
+        backgroundColor: post.isAd ? 'var(--bg-primary)' : 'transparent',
+        width: '100%',
+        boxSizing: 'border-box',
+        overflow: 'hidden'
       }}
     >
       {/* Left Avatar column */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
         <div style={{ position: 'relative', width: '42px', height: '42px' }}>
           <img
             src={post.author.avatar}
@@ -64,7 +68,7 @@ export const PostCard = ({ post }) => {
       </div>
 
       {/* Main Content column */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div style={{ flex: 1, minWidth: 0, maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {/* Author header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div 
@@ -169,12 +173,12 @@ export const PostCard = ({ post }) => {
                     <span>{post.isSaved ? 'Remove from Saved' : 'Save post'}</span>
                   </button>
 
-                  {post.author.username !== 'athiraj.kp' && (
+                  {(post.author.username === user?.username || post.author.username === 'athiraj.kp') ? (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleFollow(post.author.username);
-                        triggerNotification(isFollowed ? `Unfollowed @${post.author.username}` : `Following @${post.author.username}`);
+                        deletePost(post.id);
+                        triggerNotification('Post deleted!');
                         setIsMenuOpen(false);
                       }}
                       style={{
@@ -185,84 +189,110 @@ export const PostCard = ({ post }) => {
                         borderRadius: '10px',
                         fontSize: '13px',
                         fontWeight: '600',
-                        color: 'var(--text-primary)',
+                        color: '#ef4444',
                         width: '100%',
                         textAlign: 'left'
                       }}
                     >
-                      {isFollowed ? <UserCheck size={15} color="var(--accent-blue)" /> : <UserPlus size={15} />}
-                      <span>{isFollowed ? `Unfollow @${post.author.username}` : `Follow @${post.author.username}`}</span>
+                      <Trash2 size={15} color="#ef4444" />
+                      <span>Delete post</span>
                     </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFollow(post.author.username);
+                          triggerNotification(isFollowed ? `Unfollowed @${post.author.username}` : `Following @${post.author.username}`);
+                          setIsMenuOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          color: 'var(--text-primary)',
+                          width: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {isFollowed ? <UserCheck size={15} color="var(--accent-blue)" /> : <UserPlus size={15} />}
+                        <span>{isFollowed ? `Unfollow @${post.author.username}` : `Follow @${post.author.username}`}</span>
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerNotification(`Muted @${post.author.username}`);
+                          setIsMenuOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          color: 'var(--text-primary)',
+                          width: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <VolumeX size={15} />
+                        <span>Mute @{post.author.username}</span>
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerNotification('Post hidden from feed');
+                          setIsMenuOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          color: 'var(--text-primary)',
+                          width: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <EyeOff size={15} />
+                        <span>Not interested</span>
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerNotification('Post reported to moderators');
+                          setIsMenuOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          color: '#ef4444',
+                          width: '100%',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <Flag size={15} />
+                        <span>Report post</span>
+                      </button>
+                    </>
                   )}
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      triggerNotification(`Muted @${post.author.username}`);
-                      setIsMenuOpen(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      padding: '10px 12px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      color: 'var(--text-primary)',
-                      width: '100%',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <VolumeX size={15} />
-                    <span>Mute @{post.author.username}</span>
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      triggerNotification('Post hidden from feed');
-                      setIsMenuOpen(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      padding: '10px 12px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      color: 'var(--text-primary)',
-                      width: '100%',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <EyeOff size={15} />
-                    <span>Not interested</span>
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      triggerNotification('Post reported to moderators');
-                      setIsMenuOpen(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      padding: '10px 12px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      color: '#ef4444',
-                      width: '100%',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <Flag size={15} />
-                    <span>Report post</span>
-                  </button>
                 </div>
               </>
             )}
@@ -312,14 +342,108 @@ export const PostCard = ({ post }) => {
           </span>
         )}
 
-        {/* Media Image Attachment */}
-        {post.media && (
+        {/* 1. Image Attachment */}
+        {post.media && !post.videoUrl && (
           <div style={{ marginTop: '8px', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
             <img
               src={post.media}
               alt="Post attachment"
               style={{ width: '100%', maxHeight: '420px', objectFit: 'cover', display: 'block' }}
             />
+          </div>
+        )}
+
+        {/* 2. Video Attachment */}
+        {post.videoUrl && (
+          <div style={{ marginTop: '8px', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border-color)', backgroundColor: '#000' }}>
+            {post.videoUrl.includes('youtube.com') || post.videoUrl.includes('youtu.be') ? (
+              <iframe
+                src={post.videoUrl.replace('watch?v=', 'embed/')}
+                title="Video attachment"
+                style={{ width: '100%', height: '260px', border: 'none' }}
+                allowFullScreen
+              />
+            ) : (
+              <video controls src={post.videoUrl} style={{ width: '100%', maxHeight: '380px', display: 'block' }} />
+            )}
+          </div>
+        )}
+
+        {/* 3. Listen Music Together Attachment */}
+        {post.listenMusic && (
+          <div
+            style={{
+              marginTop: '10px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '16px',
+              padding: '10px 10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+              overflow: 'hidden',
+              width: '100%',
+              maxWidth: '100%',
+              minWidth: 0,
+              boxSizing: 'border-box'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1, overflow: 'hidden' }}>
+              <div style={{ fontSize: '18px', backgroundColor: 'var(--bg-primary)', width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                🎧
+              </div>
+              <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+                <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {post.listenMusic.title || 'Listen Together Track'}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {post.listenMusic.artist || 'Tap to listen together live'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setActiveTab('listen')}
+              className="pill active"
+              style={{ padding: '5px 10px', fontSize: '11px', fontWeight: '700', flexShrink: 0, cursor: 'pointer', whiteSpace: 'nowrap' }}
+            >
+              🎧 Listen
+            </button>
+          </div>
+        )}
+
+        {/* 4. VoiceSpace Group Attachment */}
+        {post.voiceSpace && (
+          <div
+            style={{
+              marginTop: '10px',
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
+              border: '1px solid var(--accent-blue)',
+              borderRadius: '16px',
+              padding: '12px 14px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              overflow: 'hidden',
+              maxWidth: '100%'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+              <span className="pill" style={{ fontSize: '10px', fontWeight: '800', backgroundColor: 'var(--accent-blue)', color: '#fff', padding: '4px 10px' }}>
+                🎙️ LIVE VOICE SPACE
+              </span>
+              <span style={{ fontSize: '12px', color: 'var(--accent-blue)', fontWeight: '700' }}>● {post.voiceSpace.listenersCount || 1} listening</span>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)', wordBreak: 'break-word' }}>
+              {post.voiceSpace.title || 'Voice Space Group'}
+            </div>
+            <button
+              onClick={() => setActiveTab('voice')}
+              className="pill active"
+              style={{ padding: '8px 16px', fontSize: '13px', fontWeight: '700', textAlign: 'center', marginTop: '4px', cursor: 'pointer', width: '100%' }}
+            >
+              🎙️ Join Voice Space
+            </button>
           </div>
         )}
 

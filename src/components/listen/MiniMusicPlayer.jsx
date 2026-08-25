@@ -40,9 +40,9 @@ export const MiniMusicPlayer = ({ onOpenFullRoom }) => {
         cursor: 'pointer',
         overflow: 'hidden',
         color: 'var(--text-primary)',
-        width: isExpanded ? '320px' : '52px',
-        height: isExpanded ? '68px' : '52px',
-        padding: isExpanded ? '10px 14px' : '4px'
+        width: isExpanded ? '300px' : '48px',
+        height: isExpanded ? '64px' : '48px',
+        padding: isExpanded ? '10px 14px' : '3px'
       }}
     >
       {!isExpanded ? (

@@ -278,13 +278,16 @@ export const AppProvider = ({ children }) => {
       timeAgo: "Just now",
       content: newPostData.content,
       media: newPostData.media || null,
+      videoUrl: newPostData.videoUrl || null,
+      listenMusic: newPostData.listenMusic || null,
+      voiceSpace: newPostData.voiceSpace || null,
+      postType: newPostData.postType || 'text',
       likes: 0,
       repliesCount: 0,
       reposts: 0,
       shares: 0,
       isLiked: false,
       isSaved: false,
-      isGhost: newPostData.isGhost || false,
       community: newPostData.community || null
     };
 
@@ -319,6 +322,10 @@ export const AppProvider = ({ children }) => {
     setFollowedUsers(prev => 
       prev.includes(handle) ? prev.filter(h => h !== handle) : [...prev, handle]
     );
+  };
+
+  const deletePost = (postId) => {
+    setPosts(prevPosts => prevPosts.filter(p => p.id !== postId));
   };
 
   return (
@@ -363,7 +370,8 @@ export const AppProvider = ({ children }) => {
       setIsHandRaised,
       toggleLike,
       toggleSave,
-      addPost
+      addPost,
+      deletePost
     }}>
       {children}
     </AppContext.Provider>

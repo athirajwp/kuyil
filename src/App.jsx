@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
 import { Drawer } from './components/Drawer';
 import { EditProfileModal } from './components/EditProfileModal';
+import { ComposeModal } from './components/ComposeModal';
 
 import { GlobalAudioEngine } from './components/listen/GlobalAudioEngine';
 import { MiniMusicPlayer } from './components/listen/MiniMusicPlayer';
@@ -114,6 +115,7 @@ export function App() {
           <MiniVoiceSpaceBar />
           <Drawer />
           <EditProfileModal />
+          <ComposeModal />
         </div>
       </AppProvider>
     </GlobalErrorBoundary>
