@@ -240,13 +240,6 @@ export const YouTubeAudioPlayer = ({ onSelectVideoId }) => {
           </div>
         )}
       </div>
-
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', maxHeight: '180px', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border-color)', backgroundColor: '#000' }}>
-        <img src={activeStream.cover} alt={activeStream.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', top: '10px', right: '10px', padding: '3px 10px', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '11px', fontWeight: '700', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#ef4444', display: 'inline-block' }} /> YouTube Live
-        </div>
-      </div>
     </div>
   );
 };

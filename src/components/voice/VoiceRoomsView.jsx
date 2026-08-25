@@ -97,6 +97,7 @@ const VoiceRoomsViewContent = () => {
     setIsHandRaised
   } = useApp();
   const [rooms, setRooms] = useState(MOCK_ROOMS);
+  const [selectedTopic, setSelectedTopic] = useState('All');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newRoomTitle, setNewRoomTitle] = useState('');
   const [newRoomTopic, setNewRoomTopic] = useState('General');
@@ -298,14 +299,14 @@ const VoiceRoomsViewContent = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '16px 16px 24px 16px' }}>
       {/* Top Header Section (Visible when not in full room view) */}
       {!isFullRoomActive && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
                 <Radio size={24} color="var(--accent-blue)" />
                 <span>Voice Spaces</span>
               </h1>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px', margin: 0 }}>
                 Drop-in live group audio chats & discussions
               </p>
             </div>
@@ -328,6 +329,26 @@ const VoiceRoomsViewContent = () => {
               <Plus size={16} />
               <span>Start Space</span>
             </button>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+            {['All', 'Tech & AI', 'Music & Jam', 'Business'].map(t => (
+              <button
+                key={t}
+                onClick={() => setSelectedTopic(t)}
+                className={`pill ${selectedTopic === t ? 'active' : ''}`}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer'
+                }}
+              >
+                {t}
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -456,12 +477,12 @@ const VoiceRoomsViewContent = () => {
           </div>
 
           {/* Speakers Stage Section */}
-          <div style={{ backgroundColor: 'var(--bg-card)', padding: '16px', borderRadius: '20px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--text-muted)', marginBottom: '14px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', padding: '12px 14px', borderRadius: '18px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--text-muted)', marginBottom: '10px' }}>
               Speakers ({activeSpeakers.length})
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px 12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px 10px' }}>
               {activeSpeakers.map((spk) => {
                 const isUser = spk.username === user?.username;
                 const speaking = isUser ? isMicOn : spk.isSpeaking;
@@ -474,19 +495,19 @@ const VoiceRoomsViewContent = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '4px',
                       cursor: 'pointer'
                     }}
                   >
-                    <div style={{ position: 'relative', width: '64px', height: '64px' }}>
+                    <div style={{ position: 'relative', width: '52px', height: '52px' }}>
                       {/* Animated Glowing Audio Wave Ring when Speaking */}
                       {speaking && (
                         <div
                           style={{
                             position: 'absolute',
-                            inset: '-5px',
+                            inset: '-4px',
                             borderRadius: '50%',
-                            border: `3px solid var(--accent-blue)`,
+                            border: `2.5px solid var(--accent-blue)`,
                             opacity: speakerWave === 1 ? 0.4 : speakerWave === 2 ? 0.8 : 1,
                             transform: `scale(${1 + speakerWave * 0.04})`,
                             transition: 'all 0.3s ease'
@@ -498,11 +519,11 @@ const VoiceRoomsViewContent = () => {
                         src={spk?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"}
                         alt={spk?.name || "User"}
                         style={{
-                          width: '64px',
-                          height: '64px',
+                          width: '52px',
+                          height: '52px',
                           borderRadius: '50%',
                           objectFit: 'cover',
-                          border: speaking ? '3px solid var(--accent-blue)' : '2.5px solid var(--bg-secondary)'
+                          border: speaking ? '2.5px solid var(--accent-blue)' : '2px solid var(--bg-secondary)'
                         }}
                       />
 
@@ -512,8 +533,8 @@ const VoiceRoomsViewContent = () => {
                           position: 'absolute',
                           bottom: '-1px',
                           right: '-1px',
-                          width: '20px',
-                          height: '20px',
+                          width: '17px',
+                          height: '17px',
                           borderRadius: '50%',
                           backgroundColor: spk?.isMuted && !isUser ? '#ef4444' : 'var(--bg-card)',
                           color: spk?.isMuted && !isUser ? '#fff' : 'var(--text-primary)',
@@ -524,15 +545,15 @@ const VoiceRoomsViewContent = () => {
                           boxShadow: 'var(--shadow-sm)'
                         }}
                       >
-                        {spk?.isMuted && !isUser ? <MicOff size={11} /> : <Mic size={11} color="#22c55e" />}
+                        {spk?.isMuted && !isUser ? <MicOff size={10} /> : <Mic size={10} color="#22c55e" />}
                       </div>
                     </div>
 
                     <div style={{ textAlign: 'center', width: '100%', padding: '0 2px' }}>
-                      <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <div style={{ fontSize: '11.5px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {spk?.name || "User"}
                       </div>
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '500' }}>
+                      <div style={{ fontSize: '9.5px', color: 'var(--text-muted)', fontWeight: '600' }}>
                         {spk?.role || "Speaker"}
                       </div>
                     </div>
@@ -543,12 +564,12 @@ const VoiceRoomsViewContent = () => {
           </div>
 
           {/* Listeners Section matching Speakers layout */}
-          <div style={{ backgroundColor: 'var(--bg-card)', padding: '16px', borderRadius: '20px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--text-muted)', marginBottom: '14px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', padding: '12px 14px', borderRadius: '18px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--text-muted)', marginBottom: '10px' }}>
               Listeners ({activeRoom?.listenerCount || activeListeners.length})
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px 12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px 10px' }}>
               {activeListeners.map((lst) => (
                 <div
                   key={lst?.id || Math.random()}
@@ -557,29 +578,29 @@ const VoiceRoomsViewContent = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '4px',
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ position: 'relative', width: '64px', height: '64px' }}>
+                  <div style={{ position: 'relative', width: '52px', height: '52px' }}>
                     <img
                       src={lst?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"}
                       alt={lst?.name || "Listener"}
                       style={{
-                        width: '64px',
-                        height: '64px',
+                        width: '52px',
+                        height: '52px',
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        border: '2.5px solid var(--bg-secondary)'
+                        border: '2px solid var(--bg-secondary)'
                       }}
                     />
                   </div>
 
                   <div style={{ textAlign: 'center', width: '100%', padding: '0 2px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: '11.5px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {lst?.name || "Listener"}
                     </div>
-                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '500' }}>
+                    <div style={{ fontSize: '9.5px', color: 'var(--text-muted)', fontWeight: '600' }}>
                       Listener
                     </div>
                   </div>
@@ -590,73 +611,119 @@ const VoiceRoomsViewContent = () => {
         </div>
       ) : (
         /* Live Voice Rooms Feed */
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {rooms.map((room) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {(selectedTopic === 'All' ? rooms : rooms.filter(r => r.topic === selectedTopic)).map((room) => (
             <div
               key={room.id}
               onClick={() => handleJoinRoom(room)}
               style={{
-                padding: '16px 0',
-                borderBottom: '1px solid var(--border-color)',
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '20px',
+                padding: '14px 16px',
+                boxShadow: 'var(--shadow-sm)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
+                gap: '10px',
                 cursor: 'pointer',
-                transition: 'opacity 0.15s ease'
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                userSelect: 'none'
               }}
             >
-              {/* Room Badge Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span className="pill" style={{ fontSize: '11px', fontWeight: '700', backgroundColor: 'var(--bg-secondary)' }}>
+              {/* Header: Topic Tag & Live Listener Badge */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                <span 
+                  style={{ 
+                    fontSize: '11px', 
+                    fontWeight: '800', 
+                    color: 'var(--text-secondary)', 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    padding: '3px 10px', 
+                    borderRadius: '8px',
+                    letterSpacing: '0.2px' 
+                  }}
+                >
                   {room.topic}
                 </span>
-                <span style={{ fontSize: '12px', fontWeight: '700', color: '#22c55e', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+
+                <span style={{ fontSize: '11px', fontWeight: '700', color: '#22c55e', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} />
                   {room.listenerCount} listening
                 </span>
               </div>
 
               {/* Room Title */}
-              <h3 style={{ fontSize: '17px', fontWeight: '800', color: 'var(--text-primary)', lineHeight: '1.3' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)', lineHeight: '1.25', margin: 0 }}>
                 {room.title}
               </h3>
 
-              {/* Speakers Avatars List */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ display: 'flex' }}>
-                  {(room.speakers || []).slice(0, 3).map((spk, i) => (
-                    <img
-                      key={spk.id}
-                      src={spk.avatar}
-                      alt={spk.name}
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '50%',
-                        border: '2.5px solid var(--bg-card)',
-                        marginLeft: i > 0 ? '-10px' : 0,
-                        objectFit: 'cover'
-                      }}
-                    />
-                  ))}
+              {/* Clubhouse-Style Middle Row: First 5 Avatars (+ count if > 5) on Left, Drop In on Right */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginTop: '2px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: 1 }}>
+                  {/* Overlapping Avatars (First 5) */}
+                  <div style={{ display: 'flex', flexShrink: 0 }}>
+                    {(room.speakers || []).slice(0, 5).map((spk, i) => (
+                      <img
+                        key={spk.id || i}
+                        src={spk.avatar}
+                        alt={spk.name}
+                        title={spk.name}
+                        style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '50%',
+                          border: '2px solid var(--bg-card)',
+                          marginLeft: i > 0 ? '-10px' : 0,
+                          objectFit: 'cover',
+                          boxShadow: 'var(--shadow-xs)'
+                        }}
+                      />
+                    ))}
+
+                    {/* Remaining Speakers Count Badge if > 5 */}
+                    {(room.speakers || []).length > 5 && (
+                      <div
+                        title={`${(room.speakers || []).length - 5} more speakers`}
+                        style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--bg-secondary)',
+                          border: '2px solid var(--bg-card)',
+                          marginLeft: '-10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '11px',
+                          fontWeight: '800',
+                          color: 'var(--text-primary)',
+                          boxShadow: 'var(--shadow-xs)'
+                        }}
+                      >
+                        +{(room.speakers || []).length - 5}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600' }}>
-                  {(room.speakers || []).map(s => s.name?.split(' ')[0] || s.name).join(', ')}
-                </div>
-              </div>
-
-              {/* Join Action Footer */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid var(--border-color)' }}>
-                <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-muted)' }}>
-                  🎙️ {room.speakerCount} Speakers
-                </span>
+                {/* Drop In Action Pill */}
                 <button
                   className="pill active"
-                  style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  style={{
+                    padding: '6px 14px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    border: 'none',
+                    borderRadius: '16px',
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}
                 >
                   <span>Drop in</span>
-                  <ChevronRight size={14} />
+                  <ChevronRight size={13} />
                 </button>
               </div>
             </div>

@@ -61,36 +61,35 @@ export const MiniVoiceSpaceBar = () => {
       className="animate-slide-up"
       style={{
         position: 'fixed',
-        bottom: 'var(--bottom-nav-height, 60px)',
+        bottom: '68px',
         left: 0,
         right: 0,
         margin: '0 auto',
-        width: '100%',
-        maxWidth: 'var(--max-width, 620px)',
-        backgroundColor: 'var(--bg-primary, #ffffff)',
-        color: 'var(--text-primary, #050505)',
-        borderTop: '1px solid var(--border-color, #e4e6eb)',
-        borderBottom: '1px solid var(--border-color, #e4e6eb)',
-        borderRadius: '0px',
-        padding: '8px 12px',
-        boxShadow: '0 -4px 16px rgba(0, 0, 0, 0.08)',
+        width: 'calc(100% - 24px)',
+        maxWidth: '580px',
+        backgroundColor: 'var(--bg-card)',
+        color: 'var(--text-primary)',
+        border: '1px solid var(--border-color)',
+        borderRadius: '20px',
+        padding: '12px 16px',
+        boxShadow: 'var(--shadow-lg)',
         zIndex: 999,
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '8px',
+        gap: '12px',
         backdropFilter: 'blur(16px)',
         userSelect: 'none'
       }}
     >
       {/* Left Info Section */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
         <div
           style={{
             position: 'relative',
-            width: '36px',
-            height: '36px',
+            width: '42px',
+            height: '42px',
             borderRadius: '50%',
             backgroundColor: 'rgba(24, 119, 242, 0.12)',
             display: 'flex',
@@ -99,26 +98,26 @@ export const MiniVoiceSpaceBar = () => {
             flexShrink: 0
           }}
         >
-          <Radio size={18} color="#1877F2" className="animate-pulse" />
+          <Radio size={20} color="#1877F2" className="animate-pulse" />
           <span
             style={{
               position: 'absolute',
-              top: '1px',
-              right: '1px',
-              width: '8px',
-              height: '8px',
+              top: '2px',
+              right: '2px',
+              width: '9px',
+              height: '9px',
               borderRadius: '50%',
               backgroundColor: '#22c55e',
-              border: '1.5px solid var(--bg-primary, #ffffff)'
+              border: '2px solid var(--bg-card)'
             }}
           />
         </div>
 
         <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span
               style={{
-                fontSize: '10px',
+                fontSize: '11px',
                 fontWeight: '800',
                 textTransform: 'uppercase',
                 color: '#22c55e',
@@ -127,18 +126,18 @@ export const MiniVoiceSpaceBar = () => {
             >
               LIVE VOICE SPACE
             </span>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted, #65676b)' }}>•</span>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted, #65676b)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: '600' }}>
-              <Users size={11} />
+            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>•</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '700' }}>
+              <Users size={12} />
               <span>{speakerCount + listenerCount}</span>
             </span>
           </div>
           <h4
             style={{
-              fontSize: '14px',
-              fontWeight: '700',
-              color: 'var(--text-primary, #050505)',
-              margin: '1px 0 0 0',
+              fontSize: '15px',
+              fontWeight: '800',
+              color: 'var(--text-primary)',
+              margin: '2px 0 0 0',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap'
@@ -150,18 +149,18 @@ export const MiniVoiceSpaceBar = () => {
       </div>
 
       {/* Right Controls Section */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
         {/* Toggle Mic Button */}
         <button
           onClick={handleToggleMic}
           title={isMicOn ? 'Mute Mic' : 'Unmute Mic'}
           style={{
-            width: '36px',
-            height: '36px',
+            width: '40px',
+            height: '40px',
             borderRadius: '50%',
-            border: isMicOn ? 'none' : '1px solid var(--border-color, #e4e6eb)',
-            backgroundColor: isMicOn ? '#1877F2' : 'var(--bg-secondary, #f0f2f5)',
-            color: isMicOn ? '#ffffff' : 'var(--text-primary, #050505)',
+            border: isMicOn ? 'none' : '1px solid var(--border-color)',
+            backgroundColor: isMicOn ? '#1877F2' : 'var(--bg-secondary)',
+            color: isMicOn ? '#ffffff' : 'var(--text-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -169,7 +168,7 @@ export const MiniVoiceSpaceBar = () => {
             transition: 'all 0.15s ease'
           }}
         >
-          {isMicOn ? <Mic size={16} /> : <MicOff size={16} />}
+          {isMicOn ? <Mic size={18} /> : <MicOff size={18} />}
         </button>
 
         {/* Leave Quietly Button */}
@@ -177,8 +176,8 @@ export const MiniVoiceSpaceBar = () => {
           onClick={handleLeave}
           title="Leave Room"
           style={{
-            width: '36px',
-            height: '36px',
+            width: '40px',
+            height: '40px',
             borderRadius: '50%',
             border: 'none',
             backgroundColor: 'rgba(239, 68, 68, 0.15)',
@@ -190,7 +189,7 @@ export const MiniVoiceSpaceBar = () => {
             transition: 'all 0.15s ease'
           }}
         >
-          <X size={16} />
+          <X size={18} />
         </button>
       </div>
     </div>

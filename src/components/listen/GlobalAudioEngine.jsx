@@ -17,12 +17,14 @@ export const GlobalAudioEngine = () => {
       currentTrack?.id?.length === 11 ||
       !currentTrack?.audioUrl?.endsWith(".mp3"));
 
+  const loadedVideoIdRef = useRef(null);
+
   useEffect(() => {
     if ("mediaSession" in navigator && currentTrack) {
       try {
         navigator.mediaSession.metadata = new window.MediaMetadata({
-          title: currentTrack.title || "Vibespace Music",
-          artist: currentTrack.artist || "Vibespace",
+          title: currentTrack.title || "Kuyil Music",
+          artist: currentTrack.artist || "Kuyil",
           album: "Listen Together",
           artwork: [
             { src: currentTrack.coverArt || currentTrack.cover || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`, sizes: "512x512", type: "image/jpeg" }
@@ -33,6 +35,7 @@ export const GlobalAudioEngine = () => {
     }
   }, [currentTrack, isPlaying, videoId]);
 
+  // Handle Play / Pause commands via postMessage without re-rendering or reloading iframe
   useEffect(() => {
     if (!iframeRef.current || !isYouTubeTrack) return;
     const command = isPlaying ? "playVideo" : "pauseVideo";
@@ -45,32 +48,30 @@ export const GlobalAudioEngine = () => {
       } catch (e) {}
     };
     sendMsg();
-    const timer = setTimeout(sendMsg, 500);
+    const timer = setTimeout(sendMsg, 300);
     return () => clearTimeout(timer);
-  }, [isPlaying, videoId, isYouTubeTrack]);
+  }, [isPlaying, isYouTubeTrack]);
 
-  const prevPositionRef = useRef(undefined);
+  // Track change handler via JS API
   useEffect(() => {
-    if (!iframeRef.current || currentPosition === undefined || !isYouTubeTrack) return;
-    const delta = Math.abs(currentPosition - (prevPositionRef.current ?? currentPosition));
-    if (prevPositionRef.current === undefined || delta > 2.0) {
+    if (!iframeRef.current || !isYouTubeTrack) return;
+    if (loadedVideoIdRef.current && loadedVideoIdRef.current !== videoId) {
       try {
-        iframeRef.current.contentWindow?.postMessage(
-          JSON.stringify({ event: "command", func: "seekTo", args: [currentPosition, true] }),
+        iframeRef.current?.contentWindow?.postMessage(
+          JSON.stringify({ event: "command", func: "loadVideoById", args: [videoId] }),
           "*"
         );
       } catch (e) {}
     }
-    prevPositionRef.current = currentPosition;
-  }, [currentPosition, isYouTubeTrack]);
+    loadedVideoIdRef.current = videoId;
+  }, [videoId, isYouTubeTrack]);
 
   if (!isYouTubeTrack) return null;
 
   return (
     <iframe
       ref={iframeRef}
-      key={videoId}
-      src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${isPlaying ? 1 : 0}&enablejsapi=1&playsinline=1`}
+      src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&playsinline=1&autoplay=1`}
       title="Global Persistent YouTube Music Engine"
       width="1"
       height="1"

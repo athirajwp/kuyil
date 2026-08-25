@@ -199,7 +199,7 @@ export const COMMUNITIES = [
 
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
-  const [activeTab, setActiveTab] = useState('home'); // 'home', 'messages', 'activity', 'profile', 'saved', 'liked', 'settings', 'community'
+  const [activeTab, setActiveTab] = useState('home'); // 'home', 'messages', 'activity', 'profile', 'saved', 'liked', 'settings'
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   
   const [user, setUser] = useState(INITIAL_USER);

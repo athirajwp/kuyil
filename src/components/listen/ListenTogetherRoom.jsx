@@ -12,8 +12,10 @@ import {
   UserPlus,
   Share2,
   Check,
-  Search
+  Search,
+  ArrowLeft
 } from "lucide-react";
+import { useApp } from "../../context/AppContext";
 import { useRealtimeSession } from "../../lib/realtime-store";
 import { FloatingReactions } from "./FloatingReactions";
 import { QueueManager } from "./QueueManager";
@@ -30,6 +32,7 @@ const SUGGESTED_PARTNERS = [
 ];
 
 export const ListenTogetherRoom = ({ onClose }) => {
+  const { setActiveTab } = useApp();
   const {
     session,
     playTrack,
@@ -44,7 +47,7 @@ export const ListenTogetherRoom = ({ onClose }) => {
     addParticipant,
     removeParticipant
   } = useRealtimeSession();
-  const [activeTab, setActiveTab] = useState("queue");
+  const [activeRoomTab, setActiveRoomTab] = useState("queue");
   const [chatInput, setChatInput] = useState("");
   const [isAddPartnerModalOpen, setIsAddPartnerModalOpen] = useState(false);
   const [partnerSearchQuery, setPartnerSearchQuery] = useState("");
@@ -101,211 +104,261 @@ export const ListenTogetherRoom = ({ onClose }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        padding: '16px',
-        gap: '16px',
+        padding: '12px 14px',
+        gap: '12px',
         position: 'relative'
       }}
     >
       {/* Floating Animated Emojis Overlay */}
       <FloatingReactions reactions={session.currentReactions} />
 
-      {/* Page Title & Avatar Stack Header */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.4px', color: 'var(--text-primary)' }}>
+      {/* Sleek Compact Header: Title + Inline Avatars + Invite Partner */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+        <div>
+          <h1 style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.4px', color: 'var(--text-primary)', margin: 0 }}>
             Listen Together
           </h1>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', margin: '2px 0 0 0' }}>
+            Synchronized live music
+          </p>
+        </div>
+
+        {/* Compact Inline Avatar Stack + Invite Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {session.participants.slice(0, 3).map((p, idx) => (
+              <div 
+                key={p.id || idx}
+                title={`${p.name} (@${p.username})`}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  border: '2px solid var(--bg-primary)',
+                  marginLeft: idx === 0 ? 0 : '-12px',
+                  overflow: 'hidden',
+                  backgroundColor: 'var(--bg-secondary)',
+                  boxShadow: 'var(--shadow-sm)',
+                  zIndex: 10 - idx
+                }}
+              >
+                <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setIsAddPartnerModalOpen(true)}
+            title="Invite Partner to Listen Together"
+            style={{
+              padding: '6px 12px',
+              borderRadius: '20px',
+              backgroundColor: 'var(--accent-color)',
+              color: 'var(--accent-text)',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: '700',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              cursor: 'pointer',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            <Plus size={14} strokeWidth={2.8} />
+            <span>Invite</span>
+          </button>
 
           {onClose && (
-            <button onClick={onClose} style={{ padding: '6px', borderRadius: '50%', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
-              <X size={18} />
+            <button onClick={onClose} style={{ padding: '6px', borderRadius: '50%', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)', border: 'none', cursor: 'pointer' }}>
+              <X size={16} />
             </button>
           )}
         </div>
-
-        {/* Avatar Stack + (+) Add Partner Button */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {session.participants.slice(0, 4).map((p, idx) => (
-            <div 
-              key={p.id || idx}
-              title={`${p.name} (@${p.username})`}
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                border: '3.5px solid var(--bg-primary)',
-                marginLeft: idx === 0 ? 0 : '-18px',
-                overflow: 'hidden',
-                backgroundColor: 'var(--bg-secondary)',
-                boxShadow: 'var(--shadow-md)',
-                position: 'relative',
-                zIndex: 10 - idx
-              }}
-            >
-              <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-          ))}
-
-          {/* Overlapping Circular (+) Add Partner Button */}
-          <button
-            onClick={() => setIsAddPartnerModalOpen(true)}
-            title="Add Listen Together Partner"
-            style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--accent-color)',
-              color: 'var(--accent-text)',
-              border: '3.5px solid var(--bg-primary)',
-              marginLeft: '-18px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: 'var(--shadow-md)',
-              cursor: 'pointer',
-              zIndex: 20,
-              transition: 'transform 0.15s ease'
-            }}
-          >
-            <Plus size={28} strokeWidth={3} />
-          </button>
-        </div>
       </div>
 
-      {/* Main Content Sections */}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Main Audio Player Section */}
-        <div 
-          style={{ 
-            padding: '16px 0 24px 0', 
-            borderBottom: '1px solid var(--border-color)',
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '14px'
-          }}
-        >
-          {/* YouTube Search Bar & Live Stream Video */}
-          <YouTubeAudioPlayer />
+      {/* Main Compact Unified Player Card */}
+      <div 
+        style={{ 
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
+          borderRadius: '20px',
+          padding: '14px',
+          boxShadow: 'var(--shadow-sm)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px'
+        }}
+      >
+        {/* YouTube Search Input */}
+        <YouTubeAudioPlayer />
 
-          {/* Track Info */}
-          <div style={{ width: '100%', textAlign: 'center', marginTop: '4px' }}>
-            <h3 style={{ fontSize: '17px', fontWeight: '800', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              {currentTrack.title}
-            </h3>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '500', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              {currentTrack.artist}
-            </p>
-          </div>
-
-          {/* Audio Scrubber */}
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <input
-              type="range"
-              min="0"
-              max={duration}
-              value={playback.currentPosition || 0}
-              onChange={handleSeekChange}
-              style={{ width: '100%', cursor: 'pointer', height: '4px', accentColor: 'var(--accent-color)' }}
+        {/* Horizontal Compact Player Layout: Left Artwork (105px x 105px), Right Info & Controls */}
+        <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+          {/* Artwork Thumbnail */}
+          <div 
+            style={{ 
+              position: 'relative', 
+              width: '105px', 
+              height: '105px', 
+              borderRadius: '14px', 
+              overflow: 'hidden', 
+              flexShrink: 0, 
+              boxShadow: 'var(--shadow-md)', 
+              backgroundColor: '#000',
+              border: '1px solid var(--border-color)'
+            }}
+          >
+            <img 
+              src={currentTrack.coverArt || `https://img.youtube.com/vi/${currentTrack.id || 'GqlGdhjEXNg'}/hqdefault.jpg`} 
+              alt={currentTrack.title} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)' }}>
-              <span>{formatTime(playback.currentPosition || 0)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
-
-          {/* Player Playback Controls matching Vibespace Button Theme */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '18px', margin: '4px 0' }}>
-            <button 
-              onClick={() => prevTrack()} 
+            <span 
               style={{ 
-                width: '42px', 
-                height: '42px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--bg-secondary)', 
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              title="Previous track"
-            >
-              <SkipBack size={18} />
-            </button>
-            <button 
-              onClick={() => togglePlayPause()} 
-              style={{ 
-                width: '52px', 
-                height: '52px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--accent-color)', 
-                color: 'var(--accent-text)', 
+                position: 'absolute', 
+                bottom: '6px', 
+                left: '6px', 
+                padding: '2px 6px', 
+                borderRadius: '6px', 
+                backgroundColor: 'rgba(0,0,0,0.75)', 
+                backdropFilter: 'blur(4px)',
+                color: '#fff', 
+                fontSize: '9px', 
+                fontWeight: '800', 
                 display: 'flex', 
                 alignItems: 'center', 
-                justifyContent: 'center', 
-                boxShadow: 'var(--shadow-md)',
-                transition: 'transform 0.15s ease'
+                gap: '4px',
+                border: '1px solid rgba(255,255,255,0.2)'
               }}
-              title={playback.isPlaying ? "Pause" : "Play"}
             >
-              {playback.isPlaying ? (
-                <Pause size={22} fill="currentColor" />
-              ) : (
-                <Play size={22} fill="currentColor" style={{ transform: 'translateX(1px)' }} />
-              )}
-            </button>
-            <button 
-              onClick={() => nextTrack()} 
-              style={{ 
-                width: '42px', 
-                height: '42px', 
-                borderRadius: '50%', 
-                backgroundColor: 'var(--bg-secondary)', 
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              title="Next track"
-            >
-              <SkipForward size={18} />
-            </button>
+              <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#ef4444' }} /> LIVE
+            </span>
           </div>
 
+          {/* Player Info, Progress Scrubber & Controls */}
+          <div style={{ minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div>
+              <h3 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', margin: 0 }}>
+                {currentTrack.title}
+              </h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600', margin: '2px 0 0 0', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {currentTrack.artist}
+              </p>
+            </div>
+
+            {/* Audio Scrubber */}
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <input
+                type="range"
+                min="0"
+                max={duration}
+                value={playback.currentPosition || 0}
+                onChange={handleSeekChange}
+                style={{ width: '100%', cursor: 'pointer', height: '4px', accentColor: 'var(--accent-color)' }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', fontWeight: '700', color: 'var(--text-muted)' }}>
+                <span>{formatTime(playback.currentPosition || 0)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
+
+            {/* Playback Action Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '2px' }}>
+              <button 
+                onClick={() => prevTrack()} 
+                style={{ 
+                  width: '32px', 
+                  height: '32px', 
+                  borderRadius: '50%', 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+                title="Previous track"
+              >
+                <SkipBack size={14} />
+              </button>
+
+              <button 
+                onClick={() => togglePlayPause()} 
+                style={{ 
+                  width: '40px', 
+                  height: '40px', 
+                  borderRadius: '50%', 
+                  backgroundColor: 'var(--accent-color)', 
+                  color: 'var(--accent-text)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  boxShadow: 'var(--shadow-sm)',
+                  cursor: 'pointer',
+                  border: 'none'
+                }}
+                title={playback.isPlaying ? "Pause" : "Play"}
+              >
+                {playback.isPlaying ? (
+                  <Pause size={18} fill="currentColor" />
+                ) : (
+                  <Play size={18} fill="currentColor" style={{ transform: 'translateX(1px)' }} />
+                )}
+              </button>
+
+              <button 
+                onClick={() => nextTrack()} 
+                style={{ 
+                  width: '32px', 
+                  height: '32px', 
+                  borderRadius: '50%', 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+                title="Next track"
+              >
+                <SkipForward size={14} />
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
         {/* Queue & Chat Column Section */}
         <div 
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            minHeight: '320px', 
-            padding: '20px 0',
-            gap: '14px'
+            gap: '12px',
+            padding: '8px 0'
           }}
         >
           {/* Pill Navigation Tabs matching Activity View */}
           <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
             <button
-              onClick={() => setActiveTab("queue")}
-              className={`pill ${activeTab === "queue" ? "active" : ""}`}
+              onClick={() => setActiveRoomTab("queue")}
+              className={`pill ${activeRoomTab === "queue" ? "active" : ""}`}
               style={{ flex: 1, justifyContent: 'center', padding: '8px 0', fontSize: '13px', fontWeight: '700' }}
             >
               Queue ({session.queue.length})
             </button>
             <button
-              onClick={() => setActiveTab("chat")}
-              className={`pill ${activeTab === "chat" ? "active" : ""}`}
+              onClick={() => setActiveRoomTab("chat")}
+              className={`pill ${activeRoomTab === "chat" ? "active" : ""}`}
               style={{ flex: 1, justifyContent: 'center', padding: '8px 0', fontSize: '13px', fontWeight: '700' }}
             >
               Chat ({session.liveChat.length})
             </button>
           </div>
 
-          {activeTab === "queue" ? (
+          {activeRoomTab === "queue" ? (
             <QueueManager
               queue={session.queue}
               currentUser={session.host}
@@ -361,7 +414,6 @@ export const ListenTogetherRoom = ({ onClose }) => {
             </div>
           )}
         </div>
-      </div>
 
       {/* Add Listen Together Partner Modal */}
       {isAddPartnerModalOpen && (
