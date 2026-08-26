@@ -1,10 +1,10 @@
 import React from 'react';
-import { Menu, Search, ArrowLeft, Sun, Moon, Headphones } from 'lucide-react';
+import { Menu, Search, ArrowLeft, Headphones, Bell } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { VibespaceLogo } from './VibespaceLogo';
 
 export const Navbar = () => {
-  const { activeTab, setActiveTab, setIsDrawerOpen, theme, toggleTheme, selectedCommunity, setSelectedCommunity, triggerKuyilFlight, isFlying, setIsSearchOpen } = useApp();
+  const { activeTab, setActiveTab, setIsDrawerOpen, selectedCommunity, setSelectedCommunity, triggerKuyilFlight, isFlying } = useApp();
 
   const isSubPage = ['settings', 'saved', 'liked'].includes(activeTab) || selectedCommunity !== null;
 
@@ -20,13 +20,13 @@ export const Navbar = () => {
     <header className="glass-header">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flex: 1 }}>
         {isSubPage ? (
-          <button onClick={handleBack} style={{ display: 'flex', alignItems: 'center', padding: '4px', cursor: 'pointer' }} title="Go Back">
+          <button onClick={handleBack} style={{ display: 'flex', alignItems: 'center', padding: '4px', cursor: 'pointer', border: 'none', background: 'none' }} title="Go Back">
             <ArrowLeft size={22} color="var(--text-primary)" />
           </button>
         ) : (
           <button 
             onClick={() => setIsDrawerOpen(true)}
-            style={{ display: 'flex', alignItems: 'center', padding: '6px' }}
+            style={{ display: 'flex', alignItems: 'center', padding: '6px', border: 'none', background: 'none', cursor: 'pointer' }}
             title="Open Navigation Menu"
           >
             <Menu size={26} color="var(--text-primary)" strokeWidth={2.2} />
@@ -55,20 +55,22 @@ export const Navbar = () => {
         <button 
           onClick={() => setActiveTab('listen')}
           title="Listen Together Room"
-          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'listen' ? 'var(--accent-blue)' : 'var(--text-primary)' }}
+          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'listen' ? 'var(--accent-blue)' : 'var(--text-primary)', border: 'none', background: 'none', cursor: 'pointer' }}
         >
           <Headphones size={22} />
         </button>
+
         <button 
-          onClick={toggleTheme} 
-          title="Toggle Light/Dark Theme"
-          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: 'var(--text-secondary)' }}
+          onClick={() => setActiveTab('activity')} 
+          title="Notifications & Activity"
+          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'activity' ? 'var(--accent-blue)' : 'var(--text-primary)', border: 'none', background: 'none', cursor: 'pointer' }}
         >
-          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          <Bell size={22} fill={activeTab === 'activity' ? "currentColor" : "none"} />
         </button>
+
         <button 
           onClick={() => setActiveTab('search')}
-          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'search' ? 'var(--accent-blue)' : 'var(--text-primary)' }}
+          style={{ display: 'flex', alignItems: 'center', padding: '6px', color: activeTab === 'search' ? 'var(--accent-blue)' : 'var(--text-primary)', border: 'none', background: 'none', cursor: 'pointer' }}
           title="Search People, Voice Spaces & Music"
         >
           <Search size={22} strokeWidth={2.2} />
@@ -77,3 +79,4 @@ export const Navbar = () => {
     </header>
   );
 };
+

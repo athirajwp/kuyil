@@ -33,17 +33,16 @@ export const Drawer = () => {
   };
 
   const navItems = [
-    { id: 'home', label: 'Home / Feed', icon: Home },
-    { id: 'compose', label: 'Create New Post ✍️', icon: PlusCircle, action: handleCreatePost },
-    { id: 'voice', label: 'Voice Spaces 🎙️', icon: Radio },
+    { id: 'home', label: 'Home Launchpad 🏠', icon: Home },
     { id: 'listen', label: 'Listen Together 🎧', icon: Headphones },
-    { id: 'messages', label: 'Direct Messages', icon: MessageSquare },
-    { id: 'activity', label: 'Notifications & Activity', icon: Bell },
-    { id: 'profile', label: 'My Profile', icon: User },
-    { id: 'following', label: 'Following', icon: Users, target: 'home' },
-    { id: 'saved', label: 'Saved', icon: Bookmark },
-    { id: 'liked', label: 'Liked', icon: Heart },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'voice', label: 'Voice Spaces 🎙️', icon: Radio },
+    { id: 'messages', label: 'Messages & Friends 💬', icon: MessageSquare },
+    { id: 'search', label: 'Search & Discover 🔍', icon: Search },
+    { id: 'activity', label: 'Notifications & Activity 🔔', icon: Bell },
+    { id: 'profile', label: 'My Profile 👤', icon: User },
+    { id: 'saved', label: 'Saved Content 🔖', icon: Bookmark },
+    { id: 'liked', label: 'Liked Content ❤️', icon: Heart },
+    { id: 'settings', label: 'Settings ⚙️', icon: Settings },
   ];
 
   return (

@@ -89,15 +89,15 @@ export const MessagesView = () => {
       <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)', maxWidth: '620px', margin: '0 auto', width: '100%' }}>
         {/* Chat Header */}
         <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'var(--bg-card)' }}>
-          <button 
-            onClick={() => setActiveChat(null)} 
+          <button
+            onClick={() => setActiveChat(null)}
             style={{ color: 'var(--text-primary)', border: 'none', background: 'none', cursor: 'pointer', padding: '4px' }}
           >
             <ArrowLeft size={22} />
           </button>
           <div style={{ position: 'relative' }}>
-            <img 
-              src={activeChat.user.avatar} 
+            <img
+              src={activeChat.user.avatar}
               alt={activeChat.user.name}
               style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
             />
@@ -112,7 +112,7 @@ export const MessagesView = () => {
               border: '2px solid var(--bg-card)'
             }} />
           </div>
-          <div 
+          <div
             onClick={() => viewUserProfile(activeChat.user)}
             style={{ cursor: 'pointer', flex: 1 }}
           >
@@ -124,7 +124,7 @@ export const MessagesView = () => {
         {/* Message Stream */}
         <div style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {chatMessages.map(msg => (
-            <div 
+            <div
               key={msg.id}
               style={{
                 alignSelf: msg.sender === 'me' ? 'flex-end' : 'flex-start',
@@ -146,8 +146,8 @@ export const MessagesView = () => {
 
         {/* Input Bar */}
         <form onSubmit={handleSendMessage} style={{ padding: '12px 16px', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '8px', backgroundColor: 'var(--bg-card)' }}>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Write a message..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
@@ -162,7 +162,7 @@ export const MessagesView = () => {
               outline: 'none'
             }}
           />
-          <button 
+          <button
             type="submit"
             className="pill active"
             style={{ padding: '8px 18px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', border: 'none' }}
@@ -200,8 +200,8 @@ export const MessagesView = () => {
         boxShadow: 'var(--shadow-sm)'
       }}>
         <Search size={18} color="var(--text-muted)" />
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder={filter === 'find' ? "Search online friends by name or interest..." : "Search messages..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -211,7 +211,7 @@ export const MessagesView = () => {
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-        <button 
+        <button
           onClick={() => setFilter('inbox')}
           className={`pill ${filter === 'inbox' ? 'active' : ''}`}
           style={{ padding: '7px 16px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}
@@ -219,7 +219,7 @@ export const MessagesView = () => {
           Inbox ({conversations.length})
         </button>
 
-        <button 
+        <button
           onClick={() => setFilter('requests')}
           className={`pill ${filter === 'requests' ? 'active' : ''}`}
           style={{ padding: '7px 16px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
@@ -239,7 +239,7 @@ export const MessagesView = () => {
           )}
         </button>
 
-        <button 
+        <button
           onClick={() => setFilter('find')}
           className={`pill ${filter === 'find' ? 'active' : ''}`}
           style={{
@@ -253,7 +253,7 @@ export const MessagesView = () => {
           }}
         >
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} />
-          <span>Find Online Friends</span>
+          <span>Find Friends</span>
         </button>
       </div>
 
@@ -266,7 +266,7 @@ export const MessagesView = () => {
                 const isOnline = onlineUsers.some(u => u.username === conv.user.username);
 
                 return (
-                  <div 
+                  <div
                     key={conv.id}
                     onClick={() => setActiveChat(conv)}
                     style={{
@@ -283,8 +283,8 @@ export const MessagesView = () => {
                     }}
                   >
                     <div style={{ position: 'relative' }}>
-                      <img 
-                        src={conv.user.avatar} 
+                      <img
+                        src={conv.user.avatar}
                         alt={conv.user.name}
                         style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
                       />
@@ -327,7 +327,7 @@ export const MessagesView = () => {
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', maxWidth: '280px', marginBottom: '20px' }}>
                 {searchQuery ? `Try searching for another friend's name or keyword.` : `Start a side conversation, connect with online friends, and more.`}
               </p>
-              <button 
+              <button
                 onClick={() => setFilter('find')}
                 className="pill active"
                 style={{ padding: '10px 24px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
@@ -345,7 +345,7 @@ export const MessagesView = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '4px' }}>
           {messageRequests.length > 0 ? (
             messageRequests.map(req => (
-              <div 
+              <div
                 key={req.id}
                 style={{
                   padding: '16px',
@@ -359,9 +359,9 @@ export const MessagesView = () => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <img 
-                    src={req.user.avatar} 
-                    alt={req.user.name} 
+                  <img
+                    src={req.user.avatar}
+                    alt={req.user.name}
                     style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
                   />
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -444,7 +444,7 @@ export const MessagesView = () => {
       {/* TAB 3: FIND ONLINE FRIENDS & RANDOM MATCHER */}
       {filter === 'find' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
+
           {/* HERO CARD: 🎲 Match Random Online Friend */}
           {randomMatch && (
             <div style={{
@@ -490,9 +490,9 @@ export const MessagesView = () => {
                 opacity: isSpinning ? 0.3 : 1
               }}>
                 <div style={{ position: 'relative' }}>
-                  <img 
-                    src={randomMatch.avatar} 
-                    alt={randomMatch.name} 
+                  <img
+                    src={randomMatch.avatar}
+                    alt={randomMatch.name}
                     style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--bg-card)' }}
                   />
                 </div>
@@ -521,8 +521,8 @@ export const MessagesView = () => {
               {randomMatch.interests && (
                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                   {randomMatch.interests.map((tag, idx) => (
-                    <span 
-                      key={idx} 
+                    <span
+                      key={idx}
                       style={{
                         fontSize: '11px',
                         fontWeight: '700',
@@ -659,8 +659,8 @@ export const MessagesView = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
-                        <img 
-                          src={userItem.avatar} 
+                        <img
+                          src={userItem.avatar}
                           alt={userItem.name}
                           style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
                         />
