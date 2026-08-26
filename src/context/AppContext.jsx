@@ -197,6 +197,104 @@ export const COMMUNITIES = [
   { id: 'book', name: 'Book Vibes', icon: '📘', count: '19.6k' },
 ];
 
+export const INITIAL_ONLINE_USERS = [
+  {
+    id: 'u1',
+    name: "Alex Dev",
+    username: "alex_vibe",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+    bio: "Building cool web apps 🚀 | Lofi music listener",
+    interests: ["React", "AI", "Music"],
+    isOnline: true,
+    statusNote: "Vibe coding..."
+  },
+  {
+    id: 'u2',
+    name: "Sarah Chen",
+    username: "sarah_ui",
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150",
+    bio: "UI/UX Designer & Pixel perfectionist 🎨",
+    interests: ["Design", "Figma", "Tech"],
+    isOnline: true,
+    statusNote: "Listening to Synthwave 🎧"
+  },
+  {
+    id: 'u3',
+    name: "Marcus Vance",
+    username: "marcus_code",
+    avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150",
+    bio: "Fullstack dev & open-source enthusiast",
+    interests: ["Node.js", "AI", "Gaming"],
+    isOnline: true,
+    statusNote: "Open to chat 💬"
+  },
+  {
+    id: 'u4',
+    name: "Priyanka S",
+    username: "priyanka.s_p_",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
+    bio: "Tech enthusiast & UI designer ✨",
+    interests: ["Tech", "React", "Podcast"],
+    isOnline: true,
+    statusNote: "Listening to podcasts 🎙️"
+  },
+  {
+    id: 'u5',
+    name: "Luna Trader",
+    username: "lunaxtrader",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
+    bio: "Crypto & Forex trader 📈 | Chennai meetup host",
+    interests: ["Trading", "Crypto", "Music"],
+    isOnline: true,
+    statusNote: "Watching markets 📊"
+  },
+  {
+    id: 'u6',
+    name: "David Kim",
+    username: "david_beats",
+    avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150",
+    bio: "Indie beat maker & Sound engineer 🎶",
+    interests: ["Music", "Production", "Lo-Fi"],
+    isOnline: true,
+    statusNote: "Jamming online 🎸"
+  },
+  {
+    id: 'u7',
+    name: "Maya Patel",
+    username: "maya_ai",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
+    bio: "Exploring LLMs & Generative AI 🤖",
+    interests: ["AI", "Python", "Tech"],
+    isOnline: true,
+    statusNote: "Testing prompts ⚡"
+  }
+];
+
+export const INITIAL_MESSAGE_REQUESTS = [
+  {
+    id: 'req-1',
+    user: {
+      name: "Rohan Verma",
+      username: "rohan_v",
+      avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
+      bio: "Frontend Developer from Bangalore"
+    },
+    message: "Hey Athi! Loved your latest post about Vibespace design!",
+    time: "2h ago"
+  },
+  {
+    id: 'req-2',
+    user: {
+      name: "Sophia Taylor",
+      username: "sophia_t",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+      bio: "Music enthusiast & React learner"
+    },
+    message: "Hi! Would love to connect and listen to YouTube tracks together on Kuyil!",
+    time: "5h ago"
+  }
+];
+
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
   const [activeTab, setActiveTab] = useState('home'); // 'home', 'messages', 'activity', 'profile', 'saved', 'liked', 'settings'
@@ -234,6 +332,40 @@ export const AppProvider = ({ children }) => {
     { id: 'c2', user: { name: "Luna Trader", username: "lunaxtrader", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" }, lastMessage: "Let's connect on crypto vibes!", time: "1d" }
   ]);
   const [activeChat, setActiveChat] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState(INITIAL_ONLINE_USERS);
+  const [messageRequests, setMessageRequests] = useState(INITIAL_MESSAGE_REQUESTS);
+
+  const startConversationWithUser = (userObj) => {
+    const existing = conversations.find(c => c.user.username === userObj.username);
+    if (existing) {
+      setActiveChat(existing);
+    } else {
+      const newConv = {
+        id: `c-${Date.now()}`,
+        user: {
+          name: userObj.name || userObj.username,
+          username: userObj.username,
+          avatar: userObj.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+        },
+        lastMessage: "Conversation started",
+        time: "Just now"
+      };
+      setConversations([newConv, ...conversations]);
+      setActiveChat(newConv);
+    }
+    setActiveTab('messages');
+  };
+
+  const acceptMessageRequest = (reqId) => {
+    const req = messageRequests.find(r => r.id === reqId);
+    if (!req) return;
+    setMessageRequests(prev => prev.filter(r => r.id !== reqId));
+    startConversationWithUser(req.user);
+  };
+
+  const declineMessageRequest = (reqId) => {
+    setMessageRequests(prev => prev.filter(r => r.id !== reqId));
+  };
 
   // Follow states
   const [followedUsers, setFollowedUsers] = useState(['priyanka.s_p_']);
@@ -351,6 +483,11 @@ export const AppProvider = ({ children }) => {
       conversations,
       activeChat,
       setActiveChat,
+      onlineUsers,
+      messageRequests,
+      startConversationWithUser,
+      acceptMessageRequest,
+      declineMessageRequest,
       followedUsers,
       toggleFollow,
       isDrawerOpen,
