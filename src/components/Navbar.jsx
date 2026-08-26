@@ -12,7 +12,7 @@ export const Navbar = () => {
     if (selectedCommunity) {
       setSelectedCommunity(null);
     } else {
-      setActiveTab('home');
+      setActiveTab('messages');
     }
   };
 
@@ -37,7 +37,7 @@ export const Navbar = () => {
         <div 
           id="kuyil-logo-target"
           onClick={() => {
-            setActiveTab('home');
+            setActiveTab('messages');
             setSelectedCommunity(null);
             triggerKuyilFlight();
           }}

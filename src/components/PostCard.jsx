@@ -19,12 +19,15 @@ import {
 import { useApp } from '../context/AppContext';
 
 export const PostCard = ({ post }) => {
-  const { toggleLike, toggleSave, followedUsers, toggleFollow, viewUserProfile, setActiveTab, user, deletePost } = useApp();
+  const { toggleLike, toggleSave, followedUsers, toggleFollow, viewUserProfile, setActiveTab, user, deletePost, openScrollMode, postComments = {}, addCommentToPost } = useApp();
   const [showShareNotification, setShowShareNotification] = useState(false);
   const [notificationText, setNotificationText] = useState('✓ Link copied to clipboard!');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
+  const [commentText, setCommentText] = useState('');
 
   const isFollowed = followedUsers.includes(post.author.username);
+  const currentComments = postComments[post.id] || [];
 
   const handleShare = () => {
     if (navigator.clipboard) {
@@ -43,6 +46,7 @@ export const PostCard = ({ post }) => {
 
   return (
     <article
+      onClick={() => openScrollMode && openScrollMode(post.id)}
       style={{
         padding: '16px 16px 12px 16px',
         borderBottom: '1px solid var(--border-color)',
@@ -52,7 +56,8 @@ export const PostCard = ({ post }) => {
         backgroundColor: post.isAd ? 'var(--bg-primary)' : 'transparent',
         width: '100%',
         boxSizing: 'border-box',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        cursor: 'pointer'
       }}
     >
       {/* Left Avatar column */}
@@ -61,7 +66,10 @@ export const PostCard = ({ post }) => {
           <img
             src={post.author.avatar}
             alt={post.author.name}
-            onClick={() => viewUserProfile(post.author)}
+            onClick={(e) => {
+              e.stopPropagation();
+              viewUserProfile(post.author);
+            }}
             style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', cursor: 'pointer' }}
           />
         </div>
@@ -72,7 +80,10 @@ export const PostCard = ({ post }) => {
         {/* Author header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div 
-            onClick={() => viewUserProfile(post.author)}
+            onClick={(e) => {
+              e.stopPropagation();
+              viewUserProfile(post.author);
+            }}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
           >
             <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>
@@ -463,7 +474,10 @@ export const PostCard = ({ post }) => {
         {/* Action Toolbar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '10px' }}>
           <button
-            onClick={() => toggleLike(post.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleLike(post.id);
+            }}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', color: post.isLiked ? '#ed4956' : 'var(--text-primary)' }}
           >
             <Heart size={20} fill={post.isLiked ? '#ed4956' : 'none'} strokeWidth={post.isLiked ? 0 : 1.8} />
@@ -471,13 +485,22 @@ export const PostCard = ({ post }) => {
           </button>
 
           <button
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsCommentsExpanded(!isCommentsExpanded);
+            }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: isCommentsExpanded ? 'var(--accent-blue)' : 'var(--text-primary)' }}
+            title="Comments"
           >
-            <MessageCircle size={20} strokeWidth={1.8} />
-            <span style={{ fontSize: '13px', fontWeight: '600' }}>{post.repliesCount > 0 ? post.repliesCount : ''}</span>
+            <MessageCircle size={20} strokeWidth={1.8} fill={isCommentsExpanded ? 'rgba(0, 149, 246, 0.15)' : 'none'} />
+            <span style={{ fontSize: '13px', fontWeight: '600' }}>{(post.repliesCount || 0) + currentComments.length > 0 ? (post.repliesCount || 0) + currentComments.length : ''}</span>
           </button>
 
           <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openScrollMode && openScrollMode(post.id);
+            }}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}
           >
             <Repeat size={20} strokeWidth={1.8} />
@@ -485,7 +508,10 @@ export const PostCard = ({ post }) => {
           </button>
 
           <button
-            onClick={handleShare}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShare();
+            }}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}
           >
             <Send size={19} strokeWidth={1.8} style={{ transform: 'rotate(-20deg)' }} />
@@ -493,13 +519,111 @@ export const PostCard = ({ post }) => {
           </button>
 
           <button
-            onClick={() => toggleSave(post.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSave(post.id);
+            }}
             style={{ marginLeft: 'auto', color: post.isSaved ? 'var(--accent-blue)' : 'var(--text-muted)' }}
             title="Save post"
           >
             <Bookmark size={20} fill={post.isSaved ? 'currentColor' : 'none'} strokeWidth={1.8} />
           </button>
         </div>
+
+        {/* INLINE COMMENT SECTION DRAWER */}
+        {isCommentsExpanded && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              marginTop: '12px',
+              paddingTop: '12px',
+              borderTop: '1px solid var(--border-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              animation: 'fadeIn 0.2s ease-out'
+            }}
+          >
+            {/* List of comments */}
+            {currentComments.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto', scrollbarWidth: 'none' }}>
+                {currentComments.map((c) => (
+                  <div key={c.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px' }}>
+                    <img
+                      src={c.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                      alt={c.author?.username || 'user'}
+                      style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginTop: '2px' }}
+                    />
+                    <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', padding: '6px 12px', borderRadius: '14px' }}>
+                      <div style={{ fontWeight: '700', fontSize: '12px', color: 'var(--text-primary)' }}>
+                        {c.author?.username || 'user'}
+                      </div>
+                      <div style={{ color: 'var(--text-primary)', marginTop: '2px', lineHeight: '1.35' }}>
+                        {c.text}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic', paddingLeft: '4px' }}>
+                No comments yet. Share your thoughts!
+              </div>
+            )}
+
+            {/* Comment Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!commentText.trim()) return;
+                if (typeof addCommentToPost === 'function') {
+                  addCommentToPost(post.id, commentText);
+                }
+                setCommentText('');
+              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}
+            >
+              <img
+                src={user?.avatar}
+                alt={user?.name}
+                style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+              />
+              <input
+                type="text"
+                placeholder="Write a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                style={{
+                  flex: 1,
+                  padding: '7px 12px',
+                  borderRadius: '16px',
+                  backgroundColor: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-primary)',
+                  fontSize: '13px',
+                  outline: 'none'
+                }}
+              />
+              <button
+                type="submit"
+                disabled={!commentText.trim()}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '16px',
+                  backgroundColor: 'var(--accent-blue)',
+                  color: '#ffffff',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  border: 'none',
+                  cursor: commentText.trim() ? 'pointer' : 'default',
+                  opacity: commentText.trim() ? 1 : 0.5
+                }}
+              >
+                Post
+              </button>
+            </form>
+          </div>
+        )}
 
         {showShareNotification && (
           <div style={{ fontSize: '12px', color: 'var(--accent-blue)', marginTop: '4px', fontWeight: '500' }}>

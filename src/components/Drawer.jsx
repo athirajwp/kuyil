@@ -33,16 +33,15 @@ export const Drawer = () => {
   };
 
   const navItems = [
-    { id: 'home', label: 'Home Launchpad 🏠', icon: Home },
-    { id: 'listen', label: 'Listen Together 🎧', icon: Headphones },
-    { id: 'voice', label: 'Voice Spaces 🎙️', icon: Radio },
-    { id: 'messages', label: 'Messages & Friends 💬', icon: MessageSquare },
-    { id: 'search', label: 'Search & Discover 🔍', icon: Search },
-    { id: 'activity', label: 'Notifications & Activity 🔔', icon: Bell },
-    { id: 'profile', label: 'My Profile 👤', icon: User },
-    { id: 'saved', label: 'Saved Content 🔖', icon: Bookmark },
-    { id: 'liked', label: 'Liked Content ❤️', icon: Heart },
-    { id: 'settings', label: 'Settings ⚙️', icon: Settings },
+    { id: 'messages', label: 'Messages & Friends', icon: MessageSquare },
+    { id: 'listen', label: 'Listen Together', icon: Headphones },
+    { id: 'voice', label: 'Voice Spaces', icon: Radio },
+    { id: 'search', label: 'Search & Discover', icon: Search },
+    { id: 'activity', label: 'Notifications & Activity', icon: Bell },
+    { id: 'profile', label: 'My Profile', icon: User },
+    { id: 'saved', label: 'Saved Content', icon: Bookmark },
+    { id: 'liked', label: 'Liked Content', icon: Heart },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (

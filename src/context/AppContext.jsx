@@ -297,7 +297,7 @@ export const INITIAL_MESSAGE_REQUESTS = [
 
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
-  const [activeTab, setActiveTab] = useState('home'); // 'home', 'messages', 'activity', 'profile', 'saved', 'liked', 'settings'
+  const [activeTab, setActiveTab] = useState('messages'); // 'messages', 'listen', 'voice', 'activity', 'profile', 'saved', 'liked', 'settings'
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   
   const [user, setUser] = useState(INITIAL_USER);
@@ -319,7 +319,47 @@ export const AppProvider = ({ children }) => {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isListenRoomOpen, setIsListenRoomOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
+
+  // Instagram Full Screen Scroll Mode State
+  const [selectedPostIdForScroll, setSelectedPostIdForScroll] = useState(null);
+  const [isScrollModalOpen, setIsScrollModalOpen] = useState(false);
+  const [postComments, setPostComments] = useState({});
+
+  const openScrollMode = (postId) => {
+    setSelectedPostIdForScroll(postId);
+    setIsScrollModalOpen(true);
+  };
+
+  const closeScrollMode = () => {
+    setIsScrollModalOpen(false);
+    setSelectedPostIdForScroll(null);
+  };
+
+  const addCommentToPost = (postId, text) => {
+    if (!text || !text.trim()) return;
+    const newComment = {
+      id: `c-${Date.now()}`,
+      author: { name: user.name, username: user.username, avatar: user.avatar },
+      text: text.trim(),
+      timeAgo: 'Just now'
+    };
+
+    setPostComments(prev => ({
+      ...prev,
+      [postId]: [
+        ...(prev[postId] || []),
+        newComment
+      ]
+    }));
+
+    setPosts(prevPosts => prevPosts.map(p => {
+      if (p.id === postId) {
+        return { ...p, repliesCount: (p.repliesCount || 0) + 1 };
+      }
+      return p;
+    }));
+  };
+
   // Voice Spaces State
   const [activeVoiceRoom, setActiveVoiceRoom] = useState(null);
   const [isVoiceRoomMinimized, setIsVoiceRoomMinimized] = useState(false);
@@ -500,6 +540,13 @@ export const AppProvider = ({ children }) => {
       setIsListenRoomOpen,
       isSearchOpen,
       setIsSearchOpen,
+      selectedPostIdForScroll,
+      isScrollModalOpen,
+      setIsScrollModalOpen,
+      openScrollMode,
+      closeScrollMode,
+      postComments,
+      addCommentToPost,
       activeVoiceRoom,
       setActiveVoiceRoom,
       isVoiceRoomMinimized,
@@ -519,3 +566,4 @@ export const AppProvider = ({ children }) => {
 };
 
 export const useApp = () => useContext(AppContext);
+

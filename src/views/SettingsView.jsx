@@ -56,12 +56,215 @@ export const SettingsView = () => {
 
   const [logoutMessage, setLogoutMessage] = useState(false);
 
+  // Find & Add Online Friends Settings State
+  const [allowRandomMatching, setAllowRandomMatching] = useState(true);
+  const [showInOnlineRadar, setShowInOnlineRadar] = useState(true);
+  const [whoCanSendRequests, setWhoCanSendRequests] = useState('Everyone');
+  const [autoAcceptMutuals, setAutoAcceptMutuals] = useState(false);
+  const [filterSpamRequests, setFilterSpamRequests] = useState(true);
+  const [matchingTopic, setMatchingTopic] = useState('All');
+  const [inviteToast, setInviteToast] = useState(false);
+
   const handleCopyShareLink = () => {
     const profileUrl = `https://kuyil.app/@${user.username}`;
     navigator.clipboard?.writeText(profileUrl);
     setCopiedToast(true);
     setTimeout(() => setCopiedToast(false), 2500);
   };
+
+  // SUBVIEW 0: FIND & ADD ONLINE FRIENDS SETTINGS
+  if (subView === 'find_friends') {
+    return (
+      <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', padding: '16px', gap: '20px', maxWidth: '620px', margin: '0 auto', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button onClick={() => setSubView(null)} style={{ color: 'var(--text-primary)', border: 'none', background: 'none', cursor: 'pointer' }}>
+            <ArrowLeft size={22} />
+          </button>
+          <div>
+            <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
+              Find & Add Online Friends
+            </h1>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0 0 0', fontWeight: '500' }}>
+              Manage friend discovery, online radar & request permissions
+            </p>
+          </div>
+        </div>
+
+        {inviteToast && (
+          <div style={{
+            padding: '10px 16px',
+            backgroundColor: 'var(--accent-blue)',
+            color: '#ffffff',
+            borderRadius: '16px',
+            fontSize: '13px',
+            fontWeight: '700',
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-sm)',
+            animation: 'fadeIn 0.2s ease-out'
+          }}>
+            ✓ Custom invite link copied to clipboard!
+          </div>
+        )}
+
+        {/* Section 1: Discovery & Radar Settings */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--text-muted)' }}>
+            Radar & Discovery Preferences
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>Random Friend Matcher</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Allow Kuyil to pair you with online friends in Random Matcher</p>
+            </div>
+            <button onClick={() => setAllowRandomMatching(!allowRandomMatching)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: allowRandomMatching ? 'var(--accent-blue)' : 'var(--text-muted)' }}>
+              {allowRandomMatching ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+            </button>
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>Online Friends Radar</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Show your profile in the active online users list</p>
+            </div>
+            <button onClick={() => setShowInOnlineRadar(!showInOnlineRadar)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: showInOnlineRadar ? '#22c55e' : 'var(--text-muted)' }}>
+              {showInOnlineRadar ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+            </button>
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>Matching Interest Filter</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Prioritize friends with matching hobbies and topics</p>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none', paddingTop: '4px' }}>
+              {['All', 'Music 🎧', 'Tech 💻', 'AI 🤖', 'Design 🎨', 'Trading 📈'].map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setMatchingTopic(cat)}
+                  style={{
+                    padding: '6px 14px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    borderRadius: '14px',
+                    backgroundColor: matchingTopic === cat ? 'var(--accent-blue)' : 'var(--bg-secondary)',
+                    color: matchingTopic === cat ? '#ffffff' : 'var(--text-primary)',
+                    border: matchingTopic === cat ? 'none' : '1px solid var(--border-color)',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Request & Message Permissions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+          <div style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--text-muted)' }}>
+            Request & Messaging Permissions
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>Who Can Send Friend Requests & DMs</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Control who can connect with you on Kuyil</p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', paddingTop: '4px' }}>
+              {['Everyone', 'Mutual Friends', 'Verified Only'].map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setWhoCanSendRequests(opt)}
+                  style={{
+                    padding: '8px 10px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    borderRadius: '12px',
+                    backgroundColor: whoCanSendRequests === opt ? 'var(--accent-blue)' : 'var(--bg-secondary)',
+                    color: whoCanSendRequests === opt ? '#ffffff' : 'var(--text-primary)',
+                    border: whoCanSendRequests === opt ? 'none' : '1px solid var(--border-color)',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>Auto-Accept Mutual Requests</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Automatically accept requests from people you follow back</p>
+            </div>
+            <button onClick={() => setAutoAcceptMutuals(!autoAcceptMutuals)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: autoAcceptMutuals ? 'var(--accent-blue)' : 'var(--text-muted)' }}>
+              {autoAcceptMutuals ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+            </button>
+          </div>
+
+          <div style={{ padding: '16px', borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>AI Spam Request Filter</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>Filter out bot accounts & unwanted link invites</p>
+            </div>
+            <button onClick={() => setFilterSpamRequests(!filterSpamRequests)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: filterSpamRequests ? 'var(--accent-blue)' : 'var(--text-muted)' }}>
+              {filterSpamRequests ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Section 3: Quick Launch & Sharing */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
+          <button
+            onClick={() => setActiveTab('messages')}
+            className="pill active"
+            style={{
+              padding: '12px',
+              borderRadius: '16px',
+              fontSize: '14px',
+              fontWeight: '800',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            <Users size={18} />
+            <span>Launch Find Online Friends Now 🚀</span>
+          </button>
+
+          <button
+            onClick={() => {
+              navigator.clipboard?.writeText(`https://kuyil.app/invite/@${user.username}`);
+              setInviteToast(true);
+              setTimeout(() => setInviteToast(false), 2500);
+            }}
+            style={{
+              padding: '12px',
+              borderRadius: '16px',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-primary)',
+              fontSize: '13px',
+              fontWeight: '700',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            <Share2 size={16} />
+            <span>Copy Custom Friend Invite Link 🔗</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // SUBVIEW 1: NOTIFICATIONS
   if (subView === 'notifications') {
@@ -486,7 +689,7 @@ export const SettingsView = () => {
         
         {/* Find & Add Online Friends */}
         <button 
-          onClick={() => setActiveTab('messages')}
+          onClick={() => setSubView('find_friends')}
           style={{
             display: 'flex',
             alignItems: 'center',

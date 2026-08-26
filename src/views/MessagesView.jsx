@@ -540,51 +540,53 @@ export const MessagesView = () => {
               )}
 
               {/* Match Action Buttons */}
-              <div style={{ display: 'flex', gap: '8px', marginTop: '4px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr auto', gap: '8px', marginTop: '6px' }}>
                 <button
                   onClick={() => startConversationWithUser(randomMatch)}
                   className="pill active"
                   style={{
-                    flex: 1,
-                    padding: '10px 16px',
-                    fontSize: '13px',
+                    padding: '10px 12px',
+                    fontSize: '12px',
                     fontWeight: '800',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '6px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
                   }}
                 >
-                  <MessageSquare size={15} />
+                  <MessageSquare size={14} />
                   <span>Say Hi! 👋</span>
                 </button>
 
                 <button
                   onClick={() => toggleFollow(randomMatch.username)}
                   style={{
-                    padding: '10px 16px',
+                    padding: '10px 12px',
                     borderRadius: '16px',
                     backgroundColor: followedUsers.includes(randomMatch.username) ? 'var(--bg-secondary)' : 'var(--bg-card)',
                     border: '1px solid var(--border-color)',
                     color: 'var(--text-primary)',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     fontWeight: '700',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    cursor: 'pointer'
+                    justifyContent: 'center',
+                    gap: '5px',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   {followedUsers.includes(randomMatch.username) ? (
                     <>
-                      <Check size={15} color="#22c55e" />
+                      <Check size={14} color="#22c55e" />
                       <span>Following</span>
                     </>
                   ) : (
                     <>
-                      <UserPlus size={15} />
-                      <span>Add Friend</span>
+                      <UserPlus size={14} />
+                      <span>Add</span>
                     </>
                   )}
                 </button>
@@ -593,21 +595,23 @@ export const MessagesView = () => {
                   onClick={handlePickNextRandom}
                   disabled={isSpinning}
                   style={{
-                    padding: '10px 14px',
+                    padding: '10px 12px',
                     borderRadius: '16px',
                     backgroundColor: 'var(--bg-card)',
                     border: '1px solid var(--border-color)',
                     color: 'var(--text-primary)',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     fontWeight: '700',
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '4px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
                   }}
                   title="Spin Next Random Friend"
                 >
-                  <Shuffle size={15} className={isSpinning ? "animate-spin" : ""} />
+                  <Shuffle size={14} className={isSpinning ? "animate-spin" : ""} />
                   <span>Next 🎲</span>
                 </button>
               </div>
@@ -677,12 +681,12 @@ export const MessagesView = () => {
                       </div>
 
                       <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, flexWrap: 'wrap' }}>
+                          <h4 style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)', margin: 0, flexShrink: 0 }}>
                             {userItem.name}
                           </h4>
                           {userItem.statusNote && (
-                            <span style={{ fontSize: '10px', color: 'var(--accent-blue)', fontWeight: '700', backgroundColor: 'var(--bg-secondary)', padding: '1px 6px', borderRadius: '8px', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: '10px', color: 'var(--accent-blue)', fontWeight: '700', backgroundColor: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: '8px', flexShrink: 0 }}>
                               {userItem.statusNote}
                             </span>
                           )}
@@ -696,58 +700,39 @@ export const MessagesView = () => {
                       </div>
                     </div>
 
-                    {/* Actions: Add Friend & Message */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFollow(userItem.username);
-                        }}
-                        style={{
-                          padding: '6px 12px',
-                          borderRadius: '14px',
-                          backgroundColor: isFollowing ? 'var(--bg-secondary)' : 'var(--accent-blue)',
-                          color: isFollowing ? 'var(--text-primary)' : '#ffffff',
-                          border: 'none',
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}
-                      >
-                        {isFollowing ? (
-                          <>
-                            <Check size={13} color="#22c55e" />
-                            <span>Following</span>
-                          </>
-                        ) : (
-                          <>
-                            <UserPlus size={13} />
-                            <span>Add</span>
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startConversationWithUser(userItem);
-                        }}
-                        style={{
-                          padding: '6px 10px',
-                          borderRadius: '14px',
-                          backgroundColor: 'var(--bg-secondary)',
-                          border: '1px solid var(--border-color)',
-                          color: 'var(--text-primary)',
-                          cursor: 'pointer'
-                        }}
-                        title="Send Message"
-                      >
-                        <Send size={14} />
-                      </button>
-                    </div>
+                    {/* Action: Add Friend / Following */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFollow(userItem.username);
+                      }}
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: '16px',
+                        backgroundColor: isFollowing ? 'var(--bg-secondary)' : 'var(--accent-blue)',
+                        color: isFollowing ? 'var(--text-primary)' : '#ffffff',
+                        border: isFollowing ? '1px solid var(--border-color)' : 'none',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        flexShrink: 0
+                      }}
+                    >
+                      {isFollowing ? (
+                        <>
+                          <Check size={13} color="#22c55e" />
+                          <span>Following</span>
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus size={13} />
+                          <span>Add</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 );
               })

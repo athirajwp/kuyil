@@ -141,11 +141,10 @@ export const ComposeModal = () => {
           <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }}>{user.name}</span>
         </div>
 
-        {/* 4 Posting Options Bar - ONLY THESE 4 PRESENT */}
-        <div style={{ padding: '14px 20px 0 20px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+        {/* 3 Posting Options Bar */}
+        <div style={{ padding: '14px 20px 0 20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           {[
             { id: 'image', label: 'Image', icon: Image, color: '#3b82f6' },
-            { id: 'video', label: 'Video', icon: Video, color: '#ef4444' },
             { id: 'listen', label: 'Listen', icon: Headphones, color: '#10b981' },
             { id: 'voice', label: 'VoiceSpace', icon: Radio, color: '#8b5cf6' }
           ].map(opt => {

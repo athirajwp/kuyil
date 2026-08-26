@@ -5,6 +5,7 @@ import { BottomNav } from './components/BottomNav';
 import { Drawer } from './components/Drawer';
 import { EditProfileModal } from './components/EditProfileModal';
 import { ComposeModal } from './components/ComposeModal';
+import { InstagramScrollModal } from './components/InstagramScrollModal';
 import { GlobalAudioEngine } from './components/listen/GlobalAudioEngine';
 import { MiniMusicPlayer } from './components/listen/MiniMusicPlayer';
 import { ListenTogetherRoom } from './components/listen/ListenTogetherRoom';
@@ -25,8 +26,6 @@ const MainContent = () => {
 
   const renderView = () => {
     switch (activeTab) {
-      case 'home':
-        return <FeedView />;
       case 'messages':
         return <MessagesView />;
       case 'listen':
@@ -46,7 +45,7 @@ const MainContent = () => {
       case 'liked':
         return <LikedView />;
       default:
-        return <FeedView />;
+        return <MessagesView />;
     }
   };
 
@@ -118,6 +117,7 @@ export function App() {
           <Drawer />
           <EditProfileModal />
           <ComposeModal />
+          <InstagramScrollModal />
         </div>
       </AppProvider>
     </GlobalErrorBoundary>
