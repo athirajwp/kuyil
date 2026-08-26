@@ -29,9 +29,7 @@ export async function searchYouTubeMusic(query) {
             title: v.title,
             artist: v.author || "YouTube Artist",
             album: "YouTube Music",
-            cover: v.videoThumbnails && v.videoThumbnails.length > 0
-              ? (v.videoThumbnails.find(t => t.quality === "medium") || v.videoThumbnails[0]).url
-              : `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`,
+            cover: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`,
             duration: v.lengthSeconds || 240,
             audioUrl: `https://www.youtube-nocookie.com/embed/${v.videoId}`,
             youtubeMusicUrl: `https://music.youtube.com/watch?v=${v.videoId}`

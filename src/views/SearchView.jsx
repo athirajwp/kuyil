@@ -451,7 +451,15 @@ export const SearchView = () => {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
-                    <img src={t.cover} alt={t.title} style={{ width: '42px', height: '42px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }} />
+                    <img 
+                      src={t.cover || `https://i.ytimg.com/vi/${t.id}/hqdefault.jpg`} 
+                      alt={t.title} 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://i.ytimg.com/vi/${t.id}/hqdefault.jpg`;
+                      }}
+                      style={{ width: '42px', height: '42px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }} 
+                    />
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <p style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
                         {t.title}
