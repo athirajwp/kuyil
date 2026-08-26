@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Settings, Camera } from 'lucide-react';
+import { Settings, Camera, Users, UserCheck, Heart } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { PostCard } from '../components/PostCard';
+import { UserListModal } from '../components/UserListModal';
 
 export const ProfileView = () => {
   const { user, posts, userReplies, setActiveTab, setIsEditProfileOpen, selectedUserProfile, setSelectedUserProfile, followedUsers, toggleFollow, setIsComposeOpen } = useApp();
   const [profileTab, setProfileTab] = useState('posts');
+
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const [userListTab, setUserListTab] = useState('followers');
 
   const displayUser = selectedUserProfile || user;
   const isOwnProfile = !selectedUserProfile || selectedUserProfile.username === user.username;
@@ -16,6 +20,11 @@ export const ProfileView = () => {
   const handleBackToFeed = () => {
     setSelectedUserProfile(null);
     setActiveTab('home');
+  };
+
+  const openUserListModal = (tabType) => {
+    setUserListTab(tabType);
+    setIsUserListOpen(true);
   };
 
   return (
@@ -42,49 +51,33 @@ export const ProfileView = () => {
         </div>
       </div>
 
-      {/* User Info Header Section */}
-      <div style={{ padding: '0 16px 16px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <h1 style={{ fontSize: '26px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+      {/* User Info Header Section: Name, Username, Bio + Avatar */}
+      <div style={{ padding: '0 16px 10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: 0 }}>
             {displayUser.name}
           </h1>
-          <span style={{ fontSize: '15px', color: 'var(--text-primary)', fontWeight: '500' }}>
+          <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: '500' }}>
             @{displayUser.username}
           </span>
 
           {displayUser.bio && (
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px', margin: '4px 0 0 0', lineHeight: '1.4' }}>
               {displayUser.bio}
             </p>
           )}
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
-            <div style={{ display: 'flex', marginLeft: '4px' }}>
-              {(displayUser.followers || []).map((f, i) => (
-                <img 
-                  key={i} 
-                  src={f.avatar} 
-                  alt={f.name}
-                  style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--bg-primary)', marginLeft: i > 0 ? '-6px' : 0 }}
-                />
-              ))}
-            </div>
-            <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-              {displayUser.followersCount} followers
-            </span>
-          </div>
         </div>
 
         {/* Avatar */}
         <div 
           onClick={() => isOwnProfile && setIsEditProfileOpen(true)}
-          style={{ position: 'relative', cursor: isOwnProfile ? 'pointer' : 'default' }}
+          style={{ position: 'relative', cursor: isOwnProfile ? 'pointer' : 'default', flexShrink: 0 }}
           title={isOwnProfile ? "Click to change profile picture" : ""}
         >
           <img 
             src={displayUser.avatar} 
             alt={displayUser.name} 
-            style={{ width: '76px', height: '76px', borderRadius: '50%', objectFit: 'cover' }}
+            style={{ width: '74px', height: '74px', borderRadius: '50%', objectFit: 'cover' }}
           />
           {isOwnProfile && (
             <div 
@@ -95,19 +88,96 @@ export const ProfileView = () => {
                 backgroundColor: 'var(--accent-blue)',
                 color: '#ffffff',
                 borderRadius: '50%',
-                width: '26px',
-                height: '26px',
+                width: '24px',
+                height: '24px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '700',
                 boxShadow: 'var(--shadow-sm)'
               }}
             >
-              <Camera size={13} />
+              <Camera size={12} />
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Full-Width Aligned Network Stats Micro-Card Pill Row (Friends, Followers, Following) */}
+      <div style={{ padding: '0 16px 14px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+          {/* Friends Pill */}
+          <button
+            onClick={() => openUserListModal('friends')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+            title="Click to view Friends"
+          >
+            <Heart size={14} color="var(--text-muted)" />
+            <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>
+              {displayUser.friendsCount || 8}
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600' }}>friends</span>
+          </button>
+
+          {/* Followers Pill */}
+          <button
+            onClick={() => openUserListModal('followers')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+            title="Click to view Followers"
+          >
+            <Users size={14} color="var(--text-muted)" />
+            <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>
+              {displayUser.followersCount || 16}
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600' }}>followers</span>
+          </button>
+
+          {/* Following Pill */}
+          <button
+            onClick={() => openUserListModal('following')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+            title="Click to view Following"
+          >
+            <UserCheck size={14} color="var(--text-muted)" />
+            <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)' }}>
+              {displayUser.followingCount || 12}
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600' }}>following</span>
+          </button>
         </div>
       </div>
 
@@ -120,12 +190,14 @@ export const ProfileView = () => {
               style={{
                 flex: 1,
                 padding: '9px 0',
-                borderRadius: '10px',
-                border: '1px solid var(--border-dark)',
-                fontSize: '15px',
+                borderRadius: '20px',
+                border: '1px solid var(--border-color)',
+                fontSize: '14px',
                 fontWeight: '700',
                 color: 'var(--text-primary)',
-                backgroundColor: 'var(--bg-primary)'
+                backgroundColor: 'var(--bg-card)',
+                boxShadow: 'var(--shadow-xs)',
+                cursor: 'pointer'
               }}
             >
               Edit profile
@@ -134,12 +206,14 @@ export const ProfileView = () => {
               style={{
                 flex: 1,
                 padding: '9px 0',
-                borderRadius: '10px',
-                border: '1px solid var(--border-dark)',
-                fontSize: '15px',
+                borderRadius: '20px',
+                border: '1px solid var(--border-color)',
+                fontSize: '14px',
                 fontWeight: '700',
                 color: 'var(--text-primary)',
-                backgroundColor: 'var(--bg-primary)'
+                backgroundColor: 'var(--bg-card)',
+                boxShadow: 'var(--shadow-xs)',
+                cursor: 'pointer'
               }}
             >
               Share profile
@@ -453,6 +527,14 @@ export const ProfileView = () => {
           </div>
         </div>
       )}
+
+      {/* Followers / Following / Friends List Modal */}
+      <UserListModal
+        isOpen={isUserListOpen}
+        onClose={() => setIsUserListOpen(false)}
+        initialTab={userListTab}
+        targetUser={displayUser}
+      />
     </div>
   );
 };
