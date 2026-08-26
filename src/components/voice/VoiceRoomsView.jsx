@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Mic, 
-  MicOff, 
-  Hand, 
-  Volume2, 
-  Users, 
-  Radio, 
-  Plus, 
-  X, 
-  Share2, 
-  Sparkles, 
+import {
+  Mic,
+  MicOff,
+  Hand,
+  Volume2,
+  Users,
+  Radio,
+  Plus,
+  X,
+  Share2,
+  Sparkles,
   MessageSquare,
   Globe,
   Lock,
@@ -84,8 +84,8 @@ const MOCK_ROOMS = [
 ];
 
 const VoiceRoomsViewContent = () => {
-  const { 
-    user, 
+  const {
+    user,
     viewUserProfile,
     activeVoiceRoom: activeRoom,
     setActiveVoiceRoom: setActiveRoom,
@@ -333,31 +333,12 @@ const VoiceRoomsViewContent = () => {
             </button>
           </div>
 
-          {/* Category Filter Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
-            {['All', 'Tech & AI', 'Music & Jam', 'Business'].map(t => (
-              <button
-                key={t}
-                onClick={() => setSelectedTopic(t)}
-                className={`pill ${selectedTopic === t ? 'active' : ''}`}
-                style={{
-                  padding: '6px 14px',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer'
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
         </div>
       )}
 
       {/* Active Room View Overlay if inside a Room */}
       {isFullRoomActive ? (
-        <div 
+        <div
           className="animate-fade-in"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -634,15 +615,15 @@ const VoiceRoomsViewContent = () => {
             >
               {/* Header: Topic Tag & Live Listener Badge */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                <span 
-                  style={{ 
-                    fontSize: '11px', 
-                    fontWeight: '800', 
-                    color: 'var(--text-secondary)', 
-                    backgroundColor: 'var(--bg-secondary)', 
-                    padding: '3px 10px', 
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: '800',
+                    color: 'var(--text-secondary)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    padding: '3px 10px',
                     borderRadius: '8px',
-                    letterSpacing: '0.2px' 
+                    letterSpacing: '0.2px'
                   }}
                 >
                   {room.topic}
